@@ -12,8 +12,8 @@ root.Request = class Request
 		put   : 'PUT'
 		delete: 'DELETE'
 
-	$_maxLeadingCommentCount  : 3
-	$_maxTrailingCommentCount : 3
+	$_maxLeadingCommentCount  : 3 # how many of the FIRST comments attached to the request
+	$_maxTrailingCommentCount : 3 # how many of the LATEST comments attached to the request
 	$_defaultAllowedRerequests: 10
 
 	constructor: ( request, comment ) ->

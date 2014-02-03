@@ -4,9 +4,6 @@ root.BaseConfigBlock = class BaseConfigBlock extends root.BaseBlock
 
 	$_dependencies: [ '$httpProvider', '$interpolateProvider', '$sceProvider' ]
 
-	templatePath  : root.viewTemplatePath or ''
-	templateSuffix: root.staticFileSuffix or ''
-
 	constructor: ->
 		super
 

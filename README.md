@@ -48,7 +48,7 @@ Files names determine their functional order. This matters very much for Coffee/
 
 *	For SCSS/CSS
 
-	It determines what styles override what other styles. The Zootstrap is written in such a way that styles like .red.secondary.coloring and .blue.secondary.coloring are perfectly equal in terms of CSS style-precedence, so the only thing that determines whether that element will be red or blue is whether red or blue comes last, and that's determined not only by the order of those themes' declaration in an SCSS/CSS file, but also the naming of the two files that declare the different themes (and it's likely they'll be in separate files as this can easily cut 7 minutes off the SASS build step when rendering 10 themes).
+	It determines what styles override what other styles. The Angoolar Bootstrap is written in such a way that styles like .red.secondary.coloring and .blue.secondary.coloring are perfectly equal in terms of CSS style-precedence, so the only thing that determines whether that element will be red or blue is whether red or blue comes last, and that's determined not only by the order of those themes' declaration in an SCSS/CSS file, but also the naming of the two files that declare the different themes (and it's likely they'll be in separate files as this can easily cut 7 minutes off the SASS build step when rendering 10 themes).
 
 
 ## The Convention
@@ -57,11 +57,11 @@ Files names determine their functional order. This matters very much for Coffee/
 > *	Closely related? Add 1 to the prefix
 > *	Not so closely related? Bump the prefix to the next tens digit above the dependencies with the highest prefix.
 
-Not all components are "high-level" components. For instance, a class that extends a zAngular class that starts with Base like BaseController or BaseDirective or even BaseResourceRequester or BaseHttpInterceptor - as high-level as that might seem, it just makes it a basic controller or directive or requester or interceptor. A high-level component is a component that either extends another component (that extends one of those BaseWhatevers), or declares one or more of those other components as dependencies (e.g. a class property of $_dependencies: [ root.SomeAwesomeInterceptor ] would make your class a high-level component whose filename needs to be prefixed appropriately).
+Not all components are "high-level" components. For instance, a class that extends a Angoolar class that starts with Base like BaseController or BaseDirective or even BaseResourceRequester or BaseHttpInterceptor - as high-level as that might seem, it just makes it a basic controller or directive or requester or interceptor. A high-level component is a component that either extends another component (that extends one of those BaseWhatevers), or declares one or more of those other components as dependencies (e.g. a class property of $_dependencies: [ root.SomeAwesomeInterceptor ] would make your class a high-level component whose filename needs to be prefixed appropriately).
 
-Generally the only time to need to do anything other than looking at this list of prefixes and asking yourself, "I've got a factory here, what should I use?", finding 5**_*.tail.js and naming your file 500_your_factory.tail.coffee and moving on to bigger and better things is when your YourFactory either extends another factory (not just BaseFactory), or actually depends on another zAngular factory (via the $_dependencies property).
+Generally the only time to need to do anything other than looking at this list of prefixes and asking yourself, "I've got a factory here, what should I use?", finding 5**_*.tail.js and naming your file 500_your_factory.tail.coffee and moving on to bigger and better things is when your YourFactory either extends another factory (not just BaseFactory), or actually depends on another Angoolar factory (via the $_dependencies property).
 
-In that case, what you'll do is actually simple thanks to the different classes of components (i.e. the fact that Factories can't/shouldn't depend on Directives, or that plain classes shouldn't depend on any zAngular components) as well as the separation given by cages and the different component types in the cage/coffee/ directory. You'll want to look at the filenames of the components it depends on, and the one with the highest prefix is in another cage or another component type directory just start your name at the next tens digit of the highest prefix among the dependencies.  E.g. If you have a factory that depends on a factory named 510_a_basic_factory.tail.coffee, then name yours 520_basically_an_extended_factory.tail.coffee. If on the other hand, your highest dependency in question is in your cage and also a factory (and therefore really closely related to your new component), just go ahead an add one to its prefix, which would've made BasicallyAnExtendedFactory's filename 511_basically_an_extended_factory.tail.coffee.
+In that case, what you'll do is actually simple thanks to the different classes of components (i.e. the fact that Factories can't/shouldn't depend on Directives, or that plain classes shouldn't depend on any Angoolar components) as well as the separation given by cages and the different component types in the cage/coffee/ directory. You'll want to look at the filenames of the components it depends on, and the one with the highest prefix is in another cage or another component type directory just start your name at the next tens digit of the highest prefix among the dependencies.  E.g. If you have a factory that depends on a factory named 510_a_basic_factory.tail.coffee, then name yours 520_basically_an_extended_factory.tail.coffee. If on the other hand, your highest dependency in question is in your cage and also a factory (and therefore really closely related to your new component), just go ahead an add one to its prefix, which would've made BasicallyAnExtendedFactory's filename 511_basically_an_extended_factory.tail.coffee.
 
 And now, here are the 11 current sets of Coffee/JS source files:
 
@@ -110,7 +110,7 @@ All Angular config and run blocks for modules
 e.g. GuruConfig
 
 ### 999*_*.tail.js Angoolar Final Page Setup Scripts
-Any scripts that need to run after really everything to do with zAngular has been declared.
+Any scripts that need to run after really everything to do with Angoolar has been declared.
 e.g. 9990_application.tail.coffee
 
 In addition to these, there are several special files with basically established naming:

@@ -1,27 +1,29 @@
 {
-	"name"       : "angoolar",
-	"authors"    : [ "Olen Davis <spelledlikeitsounds@gmail.com>" ],
-	"description": "This defines the core of what makes an AngOOlar project an AngOOlar project.",
-	"keywords"   : [
-		"angoolar",
-		"angular",
-		"core",
-		"base",
-		"classes",
-		"project",
-		"scaffolding",
-		"scaffold",
-		"coffeescript",
-		"object",
-		"oriented",
-		"framework",
-		"approach"
-	],
-	"license" : "MIT",
-	"homepage": "http://angoolar.com",
-	"ignore"  : [
-		"**/.*",
-		"node_modules",
-		"bower_components"
-	]
+  "name": "angoolar",
+  "authors": [
+    "Olen Davis <spelledlikeitsounds@gmail.com>"
+  ],
+  "description": "This defines the core of what makes an AngOOlar project an AngOOlar project.",
+  "keywords": [
+    "angoolar",
+    "angular",
+    "core",
+    "base",
+    "classes",
+    "project",
+    "scaffolding",
+    "scaffold",
+    "coffeescript",
+    "object",
+    "oriented",
+    "framework",
+    "approach"
+  ],
+  "license": "MIT",
+  "homepage": "http://angoolar.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ]
 }

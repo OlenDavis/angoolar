@@ -1,0 +1,1 @@
+angoolar.modules[ moduleName ] = module::$_addToAngular() for moduleName, module of angoolar.moduleConstructors

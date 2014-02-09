@@ -1,6 +1,5 @@
-root = window
 
-root.AutoAttachableDependent = class AutoAttachableDependent extends root.NamedDependent
+angoolar.AutoAttachableDependent = class AutoAttachableDependent extends angoolar.NamedDependent
 
 	$_autoAttachToDependency: null # typically speaking, this would be either '$scope' or '$rootScope', but could really be anything
 

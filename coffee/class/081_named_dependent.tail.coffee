@@ -1,6 +1,5 @@
-root = window
 
-root.NamedDependent = class NamedDependent extends root.Named
+angoolar.NamedDependent = class NamedDependent extends angoolar.Named
 	$_dependencies: []
 
 	constructor: ( dependencies ) ->
@@ -27,12 +26,12 @@ root.NamedDependent = class NamedDependent extends root.Named
 		stringDependencies
 
 	$_makeDependencyArray: ->
-		@$_dependencies = root.prototypallyMergePropertyArray @, '$_dependencies'
+		@$_dependencies = angoolar.prototypallyMergePropertyArray @, '$_dependencies'
 
 		@$_dependencies.slice 0 # this ensures the dependency array is merely a copy (and adding the return value of makeDependentConstructor to it won't inadvertently add it to the prototypal $_dependencies array)
 
 	$_dependentConstructor: ->
-		new @constructor root.argumentsToArray arguments # This will pass all the injected dependencies to the constructor as an array in the first argument
+		new @constructor angoolar.argumentsToArray arguments # This will pass all the injected dependencies to the constructor as an array in the first argument
 
 	$_makeConstructorArray: ->
 		constructorArray = @$_getDependencyStringArray @$_makeDependencyArray()

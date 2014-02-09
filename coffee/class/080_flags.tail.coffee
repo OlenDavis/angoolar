@@ -1,6 +1,5 @@
-root = window
 
-root.Flags = class Flags
+angoolar.Flags = class Flags
 	constructor: ( @value = 0 ) ->
 
 	isSet: ( flag = null ) ->

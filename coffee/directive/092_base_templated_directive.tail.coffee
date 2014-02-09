@@ -1,8 +1,7 @@
-root = window
 
 # The primary value of this class is to automatically set the templateUrl of the directive to that of the name
 # of the directive.
-root.BaseTemplatedDirective = class BaseTemplatedDirective extends root.BaseDirective
+angoolar.BaseTemplatedDirective = class BaseTemplatedDirective extends angoolar.BaseDirective
 	# $_name: "BaseDirective" # This must be overriden in extending directives
 
 	restrict: 'E'
@@ -10,11 +9,11 @@ root.BaseTemplatedDirective = class BaseTemplatedDirective extends root.BaseDire
 
 	$_makeAngularDefinition: ->
 		unless @templateUrl?
-			@templateUrl = "#{ root.camelToDashes @$_name }.html"
+			@templateUrl = "#{ angoolar.camelToDashes @$_name }.html"
 
 		super
 
 	compile: ( tElement ) ->
 		super
 
-		tElement.addClass root.camelToDashes @$_name
+		tElement.addClass angoolar.camelToDashes @$_name

@@ -1,11 +1,10 @@
-root = window
 
-root.StatefulConfigBlock = class StatefulConfigBlock extends root.BaseConfigBlock
+angoolar.StatefulConfigBlock = class StatefulConfigBlock extends angoolar.BaseConfigBlock
 
 	$_dependencies: [ '$stateProvider' ]
 
-	templatePath  : root.viewTemplatePath or ''
-	templateSuffix: root.staticFileSuffix or ''
+	templatePath  : angoolar.viewTemplatePath or ''
+	templateSuffix: angoolar.staticFileSuffix or ''
 
 	constructor: ->
 		super
@@ -33,19 +32,19 @@ root.StatefulConfigBlock = class StatefulConfigBlock extends root.BaseConfigBloc
 
 		allResolvables = {}
 
-		_.extend allResolvables, state.resolve if state.resolve?
+		angular.extend allResolvables, state.resolve if state.resolve?
 
 		# Add resolvables declared on the state
 		if state.resolvables?.length > 0
 			stateResolvables = {}
 			resolvable::$_addToAngular stateResolvables for resolvable in state.resolvables
-			_.extend allResolvables, stateResolvables
+			angular.extend allResolvables, stateResolvables
 
 		# Add all resolvables declared on the state's controller
 		if state.controller?
 			controllerResolvables = {}
 			state.controller::$_addResolvablesToAngular?( controllerResolvables )
-			_.extend allResolvables, controllerResolvables
+			angular.extend allResolvables, controllerResolvables
 
 			state.controller = state.controller::$_addToAngular()
 
@@ -56,7 +55,7 @@ root.StatefulConfigBlock = class StatefulConfigBlock extends root.BaseConfigBloc
 				if view.controller?
 					viewControllerResolvables = {}
 					view.controller::$_addResolvablesToAngular?( viewControllerResolvables )
-					_.extend allResolvables, viewControllerResolvables
+					angular.extend allResolvables, viewControllerResolvables
 
 					view.controller = view.controller::$_addToAngular()
 
@@ -73,4 +72,4 @@ root.StatefulConfigBlock = class StatefulConfigBlock extends root.BaseConfigBloc
 		@$_states[ stateName ] = state
 		state
 
-# root.addConfigBlock StatefulConfigBlock # This will add the given block to the target module(s)	
+# angoolar.addConfigBlock StatefulConfigBlock # This will add the given block to the target module(s)	

@@ -1,6 +1,5 @@
-root = window
 
-root.BaseModule = class BaseModule extends root.Named
+angoolar.BaseModule = class BaseModule extends angoolar.Named
 	# $_name: "BaseModule" # Extending modules must declare their own names
 
 	configBlocks: new Array() # These must extend BaseConfigBlock,    and if defined, will each be instantiated upon module config
@@ -22,7 +21,7 @@ root.BaseModule = class BaseModule extends root.Named
 	$_addToAngular: ->
 		super
 		
-		@$_dependencies = root.prototypallyMergePropertyArray @, '$_dependencies'
+		@$_dependencies = angoolar.prototypallyMergePropertyArray @, '$_dependencies'
 
 		module = angular.module( @$_makeName(), @$_dependencies )
 
@@ -35,5 +34,5 @@ root.BaseModule = class BaseModule extends root.Named
 
 		module
 
-# root.addModule       BaseModule # This is how to add the module to Angular
-# root.setTargetModule BaseModule # This is how to set this module to be the target module to which root.addDirective and root.addController's directives/controllers will be added
+# angoolar.addModule       BaseModule # This is how to add the module to Angular
+# angoolar.setTargetModule BaseModule # This is how to set this module to be the target module to which angoolar.addDirective and angoolar.addController's directives/controllers will be added

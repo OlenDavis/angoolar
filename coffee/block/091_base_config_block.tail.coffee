@@ -1,6 +1,5 @@
-root = window
 
-root.BaseConfigBlock = class BaseConfigBlock extends root.BaseBlock
+angoolar.BaseConfigBlock = class BaseConfigBlock extends angoolar.BaseBlock
 
 	$_dependencies: [ '$httpProvider', '$interpolateProvider', '$sceProvider' ]
 
@@ -46,4 +45,4 @@ root.BaseConfigBlock = class BaseConfigBlock extends root.BaseBlock
 		super
 		module.config @$_makeConstructorArray()
 
-# root.addConfigBlock BaseConfigBlock # This will add the given block to the target module(s)
+# angoolar.addConfigBlock BaseConfigBlock # This will add the given block to the target module(s)

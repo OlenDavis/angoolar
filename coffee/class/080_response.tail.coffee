@@ -1,10 +1,8 @@
-root = window 
-
-root.Response = class Response
+angoolar.Response = class Response
 
 	constructor: ( response, comment ) ->
 		# This allows us to create a Response (or by extension, RejectedResponse) from a Request or RejectedRequest or config object.
-		if response instanceof root.Request or root.Request::isWhatItIs( response ) or root.RejectedRequest::isWhatItIs response
+		if response instanceof angoolar.Request or angoolar.Request::isWhatItIs( response ) or angoolar.RejectedRequest::isWhatItIs response
 			response =
 				data   : ''
 				status : 0
@@ -18,7 +16,7 @@ root.Response = class Response
 		# @headers – {function([headerName])} – Header getter function.
 		# @config – {Object} – The configuration object that was used to generate the request.
 
-		@request = new root.Request @request or @config
+		@request = new angoolar.Request @request or @config
 
 		@$_lastInterceptor               = @request.$_lastInterceptor or "(None yet)"
 		@$_lastInterceptionWasPreRequest = @request.$_lastInterceptionWasPreRequest
@@ -31,12 +29,12 @@ root.Response = class Response
 			comment = response
 			response = @
 
-		root.Request::addComment response.request, comment
+		angoolar.Request::addComment response.request, comment
 
 	getComment: ( response ) ->
 		response = response or @
 
-		root.Request::getComment response.request
+		angoolar.Request::getComment response.request
 
 	getDescription: ( response ) ->
 		response = response or @

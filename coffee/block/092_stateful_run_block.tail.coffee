@@ -1,6 +1,5 @@
-root = window
 
-root.StatefulRunBlock = class StatefulRunBlock extends root.BaseRunBlock
+angoolar.StatefulRunBlock = class StatefulRunBlock extends angoolar.BaseRunBlock
 	
 	$_dependencies: [ '$rootScope', '$state', '$stateParams' ]
 
@@ -10,4 +9,4 @@ root.StatefulRunBlock = class StatefulRunBlock extends root.BaseRunBlock
 		@$rootScope.$state       = @$state
 		@$rootScope.$stateParams = @$stateParams
 
-# root.addRunBlock StatefulRunBlock # This will add the given block to the target module(s)
+# angoolar.addRunBlock StatefulRunBlock # This will add the given block to the target module(s)

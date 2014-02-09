@@ -1,6 +1,5 @@
-root = window
 
-root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
+angoolar.BaseHttpInterceptor = class BaseHttpInterceptor extends angoolar.BaseFactory
 	# $_name: 'BaseHttpInterceptor' # This must be overridden in extending interceptors
 
 	$_dependencies: [ '$q', '$injector' ]
@@ -47,7 +46,7 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# RejectedRequest, that way we have access the config object that caused the rejection. So, when if ever
 	# you reject the config intercepting a request, always reject it like so:
 	# 	<pre>
-	# 		config.reject new root.RejectedRequest config, "I swear something's just plain wrong about this."
+	# 		config.reject new angoolar.RejectedRequest config, "I swear something's just plain wrong about this."
 	# 	</pre>
 	#
 	# Also note that the way precedence works with the interceptors is this: the last interceptor in the
@@ -168,18 +167,18 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# presuming and enforcing that you follow certain conventions with what you return.
 	#
 	# Assurances:
-	# 1) 'request' will be an instance of root.Request
+	# 1) 'request' will be an instance of angoolar.Request
 	#
 	# Enforced return-value Conventions:
 	# A) To do something without rejecting the request, or to change the request being made, return an instance of
-	#    root.Request, whether its the request passed in, or a new instance.
-	# B) To reject the request, return an instance of root.RejectedRequest.
+	#    angoolar.Request, whether its the request passed in, or a new instance.
+	# B) To reject the request, return an instance of angoolar.RejectedRequest.
 	# C) To defer the interception chain against some promise, simply return the promise that will be used to continue
 	#    down the interception chain with whatever you resolve or reject your returned promise's deferred object with.
 	# D) If you returned the promise of some deferred object, then if you resolve that deferred object, what you
-	#    resolve it with must be an instance of root.Request.
+	#    resolve it with must be an instance of angoolar.Request.
 	# E) If you returned the promise of some deferred object, then if you rejecte that deferred object, what you
-	#    reject it with must be an instance of root.RejectedRequest.
+	#    reject it with must be an instance of angoolar.RejectedRequest.
 	#
 	# If any of those conventions are violated, an error will be thrown immediately, breaking all of the subsequent
 	# interceptors - since they'll have null requests/responses as this one will have resulted in null due to throwing
@@ -191,57 +190,57 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# conventions as the interceptRequest method does:
 	#
 	# Assurances:
-	# 1) 'rejectedRequest' will be an instance of root.RejectedRequest
+	# 1) 'rejectedRequest' will be an instance of angoolar.RejectedRequest
 	#
 	# Enforced return-value Conventions:
-	# A) To return the interception chain to its non-rejected path, you can return an instance of root.Request.
+	# A) To return the interception chain to its non-rejected path, you can return an instance of angoolar.Request.
 	# B) To do something while continuing down the rejected path of the interception chain, return the rejectedRequest
-	#    passed as an argument, or any other instance of root.RejectedRequest.
+	#    passed as an argument, or any other instance of angoolar.RejectedRequest.
 	# C) To defer the processing of the remaining interception chain, simply return the promise of a deferred object,
-	#    the root.Request or root.RejectedRequest with which you eventually resolve/reject it with will be used to 
+	#    the angoolar.Request or angoolar.RejectedRequest with which you eventually resolve/reject it with will be used to 
 	#    continue down the interception chain.
 	# D) If you returned the promise of some deferred object, then if you resolve that deferred object, what you
-	#    resolve it with must be an instance of root.Request.
+	#    resolve it with must be an instance of angoolar.Request.
 	# E) If you returned the promise of some deferred object, then if you rejecte that deferred object, what you
-	#    reject it with must be an instance of root.RejectedRequest.
+	#    reject it with must be an instance of angoolar.RejectedRequest.
 	interceptRejectedRequest: ( rejectedRequest ) -> rejectedRequest
 
 	# This method corresponds to the underlying 'response' method and makes similar assurances and enforces similar
 	# conventions as the interceptRequest method does:
 	#
 	# Assurances:
-	# 1) 'response' will be an instance of root.Response
+	# 1) 'response' will be an instance of angoolar.Response
 	#
 	# Enforced return-value Conventions:
 	# A) To do something without rejecting the response, or to change the response being made, return an instance of
-	#    root.Response, whether its the response passed in, or a new instance.
-	# B) To reject the response, return an instance of root.RejectedResponse.
+	#    angoolar.Response, whether its the response passed in, or a new instance.
+	# B) To reject the response, return an instance of angoolar.RejectedResponse.
 	# C) To defer the processing of the remaining interception chain, simply return the promise of a deferred object,
-	#    the root.Response or root.Response with which you eventually resolve/reject it will be used to continue down
+	#    the angoolar.Response or angoolar.Response with which you eventually resolve/reject it will be used to continue down
 	#    the interception chain.
 	# D) If you returned the promise of some deferred object, then if you resolve that deferred object, what you
-	#    resolve it with must be an instance of root.Response.
+	#    resolve it with must be an instance of angoolar.Response.
 	# E) If you returned the promise of some deferred object, then if you rejecte that deferred object, what you
-	#    reject it with must be an instance of root.RejectedResponse.
+	#    reject it with must be an instance of angoolar.RejectedResponse.
 	interceptResponse: ( response ) -> response
 
 	# This method corresponds to the underlying 'responseError' method and makes similar assurances and enforces similar
 	# conventions as the interceptResponse method does:
 	#
 	# Assurances:
-	# 1) 'rejectedResponse' will be an instance of root.RejectedResponse
+	# 1) 'rejectedResponse' will be an instance of angoolar.RejectedResponse
 	#
 	# Enforced return-value Conventions:
-	# A) To return the interception chain to its non-rejected path, you can return an instance of root.Response.
+	# A) To return the interception chain to its non-rejected path, you can return an instance of angoolar.Response.
 	# B) To do something while continuing down the rejected path of the interception chain, return the rejectedResponse
-	#    passed as an argument, or any other instance of root.RejectedResponse.
+	#    passed as an argument, or any other instance of angoolar.RejectedResponse.
 	# C) To defer the processing of the remaining interception chain, simply return the promise of a deferred object,
-	#    the root.Response or root.RejectedResponse with which you eventually resolve/reject it with will be used to 
+	#    the angoolar.Response or angoolar.RejectedResponse with which you eventually resolve/reject it with will be used to 
 	#    continue down the interception chain.
 	# D) If you returned the promise of some deferred object, then if you resolve that deferred object, what you
-	#    resolve it with must be an instance of root.Response.
+	#    resolve it with must be an instance of angoolar.Response.
 	# E) If you returned the promise of some deferred object, then if you rejecte that deferred object, what you
-	#    reject it with must be an instance of root.RejectedResponse.
+	#    reject it with must be an instance of angoolar.RejectedResponse.
 	interceptRejectedResponse: ( rejectedResponse ) -> rejectedResponse
 
 
@@ -258,7 +257,7 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# 1: The [un]modified config argument you were passed
 	# 2: A promise for a deferred whose resolution will return the [un]modified config passed into this method,
 	#    or, if even that nested promise must return an error, the same as 3:
-	# 3: A $q.reject wrapped root.RejectedRequest instance - this is to ensure not only that the return value
+	# 3: A $q.reject wrapped angoolar.RejectedRequest instance - this is to ensure not only that the return value
 	#    registers as an error and doesn't inadvertently allow an erroneous request to be made, but that other
 	#    interceptors up the precedence might still be able to complete the original request if possible.
 	request: ( config ) => 
@@ -272,10 +271,10 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# 1: The [un]modified rejectedRequest argument you were passed
 	# 2: If the error can be recovered from, then the original config object contained in the rejectedRequest
 	#    (which is only possible if whatever previous - lower priority - interceptor returned a $q.reject wrapped
-	#    instance of root.RejectedRequest)
+	#    instance of angoolar.RejectedRequest)
 	# 3: A promise for a deferred whose resolution may return the original config in the rejectedRequest, or, if
 	#    even that nested promise must return an error, the same as 4:
-	# 4: A new $q.reject wrapped root.RejectedRequest instance, referring to the original rejectedRequest
+	# 4: A new $q.reject wrapped angoolar.RejectedRequest instance, referring to the original rejectedRequest
 	requestError: ( rejectedRequest ) => 
 		@injectCircularDependencies()
 		wrappedRejectedRequest = @checkRejectedRequest rejectedRequest
@@ -287,7 +286,7 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# 1: The [un]modified response argument you were passed
 	# 2: A promise for a deferred whose resolution will return the [un]modified response passed into this method,
 	#    or, if even that nested promise must return an error, the same as 3:
-	# 3: A $q.reject wrapped root.RejectedResponse instance - this is to ensure not only that the return value
+	# 3: A $q.reject wrapped angoolar.RejectedResponse instance - this is to ensure not only that the return value
 	#    registers as an error and doesn't inadvertently allow an erroneous response to be processed as if it were
 	#    valid, but so that other interceptors down the precedence might still be able to intercept the failure as
 	#    and perhaps use the original request or just the original response to try and process it successfully, or
@@ -303,10 +302,10 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# 1: The [un]modified rejectedResponse argument you were passed
 	# 2: If the error can be recovered from, then the original response object contained in the rejectedResponse
 	#    (which is only possible if whatever previous - lower priority - interceptor returned a $q.reject wrapped
-	#    instance of root.RejectedResponse)
+	#    instance of angoolar.RejectedResponse)
 	# 3: A promise for a deferred whose resolution may return the original response in the rejectedResponse, or, if
 	#    even that nested promise must return an error, the same as 4:
-	# 4: A new $q.reject wrapped root.RejectedResponse instance, referring to the original rejectedResponse
+	# 4: A new $q.reject wrapped angoolar.RejectedResponse instance, referring to the original rejectedResponse
 	responseError: ( rejectedResponse ) => 
 		@injectCircularDependencies()
 		wrappedRejectedResponse = @checkRejectedResponse rejectedResponse
@@ -328,19 +327,19 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 
 	# Takes in whatever was passed into the request callback of the interceptor and ensures that it is at least a raw
 	# request object (or 'config', as documented here: http://docs-angularjs-org-dev.appspot.com/api/ng.$http#Usage),
-	# and returns an instance of the root.Request class to pass to the interceptRequest method, throwing an immediate
+	# and returns an instance of the angoolar.Request class to pass to the interceptRequest method, throwing an immediate
 	# and actually helpful error (i.e. one that refers to whatever the prior interceptor was by name - if there was a
 	# prior interceptor) if it wasn't a valid request.
 	checkRequest: ( request ) ->
-		unless root.Request::isWhatItIs request
+		unless angoolar.Request::isWhatItIs request
 			errorMessage = "The request intercepted by the '#{ @$_makeName() }' interceptor wasn't actually a request (in JSON):\n\t\t#{ angular.toJson request }"
 			errorMessage += "\n(The problem likely originates somewhere in #{ request.$_lastInterceptor }'s interceptRequest method.)" if request.$_lastInterceptor?
 			throw new Error errorMessage
 		else
-			new root.Request request
+			new angoolar.Request request
 
 	# Takes in whatever was passed into the requestError callback of the interceptor and ensures that it is in fact a
-	# RejectedRequest, which is actually quite strict. (If you refer to the implementation of root.RejectedRequest::
+	# RejectedRequest, which is actually quite strict. (If you refer to the implementation of angoolar.RejectedRequest::
 	# isWhatItIs, you'll see that it checks for an object property that is only attached to the request object - i.e.
 	# the 'config' object documented here: http://docs-angularjs-org-dev.appspot.com/api/ng.$http#Usage) So basically
 	# this enforces that when using an interceptor that extends BaseHttpInterceptor without totally overriding
@@ -351,26 +350,26 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# was the likely culprit of passing as their result of intercepting a request - or response for that matter - the
 	# wrong sort of result).
 	checkRejectedRequest: ( rejectedRequest ) ->
-		unless root.RejectedRequest::isWhatItIs rejectedRequest
+		unless angoolar.RejectedRequest::isWhatItIs rejectedRequest
 			errorMessage = "The rejectedRequest intercepted by the '#{ @$_makeName() }' interceptor wasn't actually a rejectedRequest (in JSON):\n\t\t#{ angular.toJson rejectedRequest }"
 			errorMessage += "\n(The problem likely originates somewhere in #{ rejectedRequest.$_lastInterceptor }'s interceptRejectedRequest method.)" if rejectedRequest.$_lastInterceptor?
 			throw new Error errorMessage
 		else
-			new root.RejectedRequest rejectedRequest
+			new angoolar.RejectedRequest rejectedRequest
 
 	# Takes in whatever was returned as the result from the interceptor's interceptRequest or interceptRejectedRequest
 	# and very strictly enforces that it be either a Request or RejectedRequest. The way we accomplish that, even when
 	# the result of the intercept[Rejected]Request is a promise is explained below at the ***PROMISE ENFORCEMENT***
 	checkRequestResult: ( requestResult, fromRejection ) ->
-		unless ( fromRejection and requestResult instanceof root.RejectedRequest ) or ( not fromRejection and requestResult instanceof root.Request ) or ( @isPromise requestResult )
+		unless ( fromRejection and requestResult instanceof angoolar.RejectedRequest ) or ( not fromRejection and requestResult instanceof angoolar.Request ) or ( @isPromise requestResult )
 			throw new Error "The result of the '#{ @$_makeName() }' interceptor's #{ if fromRejection then 'interceptRejectedRequest' else 'interceptRequest' } was not a valid Request, RejectedRequest, or promise object (in JSON):\n\t\t#{ angular.toJson requestResult }"
 		else
 			unless @isPromise requestResult
 				requestResult.setLastInterceptor @, yes
 
-			if requestResult instanceof root.RejectedRequest
+			if requestResult instanceof angoolar.RejectedRequest
 				return @$q.reject requestResult
-			else if requestResult instanceof root.Request
+			else if requestResult instanceof angoolar.Request
 				return requestResult
 			else # requestResult is a promise
 				# ***PROMISE ENFORCEMENT***
@@ -387,12 +386,12 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# Just like the checkRequest, this ensures whatever hit this interceptor's 'response' callback is a valid response
 	# object, then passes back an instance of the Response class made with it.
 	checkResponse: ( response ) ->
-		unless root.Response::isWhatItIs response
+		unless angoolar.Response::isWhatItIs response
 			errorMessage = "The response intercepted by the '#{ @$_makeName() }' interceptor wasn't actually a response (in JSON):\n\t\t#{ angular.toJson response }"
 			errorMessage += "\n(The problem likely originates somewhere in #{ response.$_lastInterceptor }'s interceptResponse method.)" if response.$_lastInterceptor?
 			throw new Error errorMessage
 		else
-			new root.Response response
+			new angoolar.Response response
 
 	# Just like the checkRejectedRequest, this ensures whatever hit this interceptor's 'responseError' callback is
 	# either an actual RejectedResponse, OR - and this is unique to the responseError callback - an actual
@@ -400,29 +399,29 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 	# it through to the response handling directly. Therefore, if we have a RejectedRequest, we'll want to turn it
 	# into a RejectedResponse that corresponds to it.
 	checkRejectedResponse: ( rejectedResponse ) ->
-		unless root.RejectedResponse::isWhatItIs( rejectedResponse ) or rejectedResponse instanceof root.RejectedRequest
+		unless angoolar.RejectedResponse::isWhatItIs( rejectedResponse ) or rejectedResponse instanceof angoolar.RejectedRequest
 			errorMessage = "The rejectedResponse intercepted by the '#{ @$_makeName() }' interceptor wasn't actually a rejectedResponse (in JSON):\n\t\t#{ angular.toJson rejectedResponse }"
 			errorMessage += "\n(The problem likely originates somewhere in #{ rejectedResponse.$_lastInterceptor }'s interceptRejectedResponse method.)" if rejectedResponse.$_lastInterceptor?
 			throw new Error errorMessage
 		else
-			unless rejectedResponse instanceof root.RejectedRequest
-				new root.RejectedResponse rejectedResponse
-			else # if rejectedResponse instanceof root.RejectedRequest
-				root.RejectedResponse::fromRejectedRequest rejectedResponse
+			unless rejectedResponse instanceof angoolar.RejectedRequest
+				new angoolar.RejectedResponse rejectedResponse
+			else # if rejectedResponse instanceof angoolar.RejectedRequest
+				angoolar.RejectedResponse::fromRejectedRequest rejectedResponse
 
 	# Just like the checkRequestResult, this ensures that what was returned as the result of interceptResponse or
 	# interceptRejectedResponse (or eventually be resolved or rejected with) is an instance of Response or
 	# RejectedResponse.
 	checkResponseResult: ( responseResult, fromRejection ) ->
-		unless ( fromRejection and responseResult instanceof root.RejectedResponse ) or ( not fromRejection and responseResult instanceof root.Response ) or ( @isPromise responseResult )
+		unless ( fromRejection and responseResult instanceof angoolar.RejectedResponse ) or ( not fromRejection and responseResult instanceof angoolar.Response ) or ( @isPromise responseResult )
 			throw new Error "The result of the '#{ @$_makeName() }' interceptor's #{ if fromRejection then 'interceptRejectedResponse' else 'interceptResponse' } was not a valid Response, RejectedResponse, or promise object (in JSON):\n\t\t#{ angular.toJson responseResult }"
 		else
 			unless @isPromise responseResult
 				responseResult.setLastInterceptor @, yes
 
-			if responseResult instanceof root.RejectedResponse
+			if responseResult instanceof angoolar.RejectedResponse
 				return @$q.reject responseResult
-			else if responseResult instanceof root.Response
+			else if responseResult instanceof angoolar.Response
 				return responseResult
 			else # responseResult is a promise
 				# See the ***PROMISE ENFORCEMENT*** comment above in the checkRequestResult for why this is necessary
@@ -433,10 +432,10 @@ root.BaseHttpInterceptor = class BaseHttpInterceptor extends root.BaseFactory
 				)
 
 	isPromise: ( promise ) ->
-		_.isFunction( promise.then )
+		angular.isFunction( promise.then )
 
 	isConfig: ( config ) ->
-		_.has( config, 'method' ) and _.has( config, 'url' ) and not root.Request::isWhatItIs config
+		_.has( config, 'method' ) and _.has( config, 'url' ) and not angoolar.Request::isWhatItIs config
 
 	isRawResponse: ( response ) ->
-		_.has( response, 'status' ) and _.has( response, 'config' ) and _.has( response, 'data' ) and _.isFunction response.headers
+		_.has( response, 'status' ) and _.has( response, 'config' ) and _.has( response, 'data' ) and angular.isFunction response.headers

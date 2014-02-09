@@ -1,6 +1,5 @@
-root = window
 
-root.Request = class Request
+angoolar.Request = class Request
 	type:
 		get   : 0
 		post  : 1

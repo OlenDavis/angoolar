@@ -1,15 +1,14 @@
-root = window
 
-root.BaseRunBlock = class BaseRunBlock extends root.BaseBlock
+angoolar.BaseRunBlock = class BaseRunBlock extends angoolar.BaseBlock
 	
 	$_dependencies: [ '$rootScope' ]
 
 	constructor: ->
 		super
 
-		@$rootScope.isBrowser = root.isBrowser
+		@$rootScope.isBrowser = angoolar.isBrowser
 
 	$_addToAngular: ( module ) ->
 		module.run @$_makeConstructorArray()
 
-# root.addRunBlock BaseRunBlock # This will add the given block to the target module(s)
+# angoolar.addRunBlock BaseRunBlock # This will add the given block to the target module(s)

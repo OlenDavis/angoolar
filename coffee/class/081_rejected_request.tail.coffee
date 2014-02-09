@@ -1,6 +1,5 @@
-root = window
 
-root.RejectedRequest = class RejectedRequest extends root.Request
+angoolar.RejectedRequest = class RejectedRequest extends angoolar.Request
 
 	constructor: ( rejectedRequest, reason ) ->
 		super rejectedRequest
@@ -14,7 +13,7 @@ root.RejectedRequest = class RejectedRequest extends root.Request
 			reason = rejectedRequest
 			rejectedRequest = @
 
-		root.Request::addComment rejectedRequest, "(Rejection reason)\t#{ reason }"
+		angoolar.Request::addComment rejectedRequest, "(Rejection reason)\t#{ reason }"
 
 	isWhatItIs: ( possibleRejectedRequest ) ->
 		possibleRejectedRequest          .$_rejected   and

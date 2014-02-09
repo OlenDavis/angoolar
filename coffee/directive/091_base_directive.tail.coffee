@@ -1,12 +1,11 @@
-root = window
 
 # For simplicity/coherence, define your directive's controller (if it has one) in the same file as the 
 # directive, just before the directive. That way we can easily have all the logic comprising a directive
 # in one place (also so we can ensure the directive's controller is declared before the directive, and
 # also so we can allow all directives to name their controllers as simply as possible without worrying
-# about name collision with other controllers on the root scope).
+# about name collision with other controllers on the angoolar scope).
 
-root.BaseDirectiveController = class BaseDirectiveController extends root.BaseController
+angoolar.BaseDirectiveController = class BaseDirectiveController extends angoolar.BaseController
 	# $_name: "BaseDirectiveController" # This must be overriden in extending directive controllers
 
 	$_dependencies: [ "$element", "$attrs", "$transclude" ]
@@ -17,7 +16,7 @@ root.BaseDirectiveController = class BaseDirectiveController extends root.BaseCo
 # NOTE: While normal controllers must be added to a module to be accessed from that module's scope, a 
 # directive's controller merely needs to be prototypally assigned to its directive's class.
 
-root.BaseDirective = class BaseDirective extends root.NamedDependent
+angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 	# $_name: "BaseDirective" # This must be overriden in extending directives
 
 	$_dependencies: [ '$parse', '$interpolate' ]
@@ -37,21 +36,21 @@ root.BaseDirective = class BaseDirective extends root.NamedDependent
 
 	$_makeAngularDefinition: ->
 		# First prototypally extend the inheritable object properties
-		@scope                   = root.prototypallyExtendPropertyObject @, 'scope'                   if @scope?                   and angular.isObject @scope
-		@scopeDefaults           = root.prototypallyExtendPropertyObject @, 'scopeDefaults'           if @scopeDefaults?           and angular.isObject @scopeDefaults
-		@scopeDefaultExpressions = root.prototypallyExtendPropertyObject @, 'scopeDefaultExpressions' if @scopeDefaultExpressions? and angular.isObject @scopeDefaultExpressions
+		@scope                   = angoolar.prototypallyExtendPropertyObject @, 'scope'                   if @scope?                   and angular.isObject @scope
+		@scopeDefaults           = angoolar.prototypallyExtendPropertyObject @, 'scopeDefaults'           if @scopeDefaults?           and angular.isObject @scopeDefaults
+		@scopeDefaultExpressions = angoolar.prototypallyExtendPropertyObject @, 'scopeDefaultExpressions' if @scopeDefaultExpressions? and angular.isObject @scopeDefaultExpressions
 
 		# Handle the scope property
 		# Check for the special $_self scope attribute if the directive's restrict doesn't include 'E' - i.e. if the directive can't be for an element
 		if @restrict?.indexOf( 'E' ) is -1 and @scope?.$_self?
 			@scope[ @$_makeName ] = @scope.$_self
 			@$_selfScopeAttribute = @scope.$_self.match( /^@?=?&?\??\s*(.*)\s*$/ )[ 1 ] or @$_makeName()
-			root.delete @scope, '$_self'
+			angoolar.delete @scope, '$_self'
 
 		# Handle the require properties
 		# First, prototypally merge them
-		@$_requireSiblings = root.prototypallyMergePropertyArray @, '$_requireSiblings' if @$_requireSiblings? and angular.isArray @$_requireSiblings
-		@$_requireParents  = root.prototypallyMergePropertyArray @, '$_requireParents'  if @$_requireParents?  and angular.isArray @$_requireParents
+		@$_requireSiblings = angoolar.prototypallyMergePropertyArray @, '$_requireSiblings' if @$_requireSiblings? and angular.isArray @$_requireSiblings
+		@$_requireParents  = angoolar.prototypallyMergePropertyArray @, '$_requireParents'  if @$_requireParents?  and angular.isArray @$_requireParents
 
 		# Then go through them all, and construct the require property
 		if @$_requireSiblings?.length or @$_requireParents?.length
@@ -157,7 +156,7 @@ root.BaseDirective = class BaseDirective extends root.NamedDependent
 	# Btw, the logic for whether or not to use the "template" or "templateUrl" is left entirely up to 
 	# Angular. That said, the @templateUrl will always be prepended with @templatePath (so 
 	# @templatePath should include a trailing slash).
-	templatePath  : root.directiveTemplatePath or ""
-	templateSuffix: root.staticFileSuffix or ""
+	templatePath  : angoolar.directiveTemplatePath or ""
+	templateSuffix: angoolar.staticFileSuffix or ""
 
-# root.addDirective BaseDirective # This is how to export a directive to the current target module's scope
+# angoolar.addDirective BaseDirective # This is how to export a directive to the current target module's scope

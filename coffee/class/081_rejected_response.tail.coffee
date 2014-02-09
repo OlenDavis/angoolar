@@ -1,6 +1,5 @@
-root = window
 
-root.RejectedResponse = class RejectedResponse extends root.Response
+angoolar.RejectedResponse = class RejectedResponse extends angoolar.Response
 
 	constructor: ( rejectedResponse, reason ) ->
 		super rejectedResponse
@@ -14,7 +13,7 @@ root.RejectedResponse = class RejectedResponse extends root.Response
 			reason = rejectedResponse
 			rejectedResponse = @
 
-		root.Request::addComment rejectedResponse.request, "(Rejection reason)\t#{ reason }"
+		angoolar.Request::addComment rejectedResponse.request, "(Rejection reason)\t#{ reason }"
 
 	isWhatItIs: ( possibleRejectedResponse ) ->
 		(
@@ -33,7 +32,7 @@ root.RejectedResponse = class RejectedResponse extends root.Response
 		( _.has possibleRejectedResponse, 'config'         )
 
 	fromRejectedRequest: ( rejectedRequest ) ->
-		new root.RejectedResponse {
+		new angoolar.RejectedResponse {
 				data   : {}
 				status : 0
 				headers: ( -> )

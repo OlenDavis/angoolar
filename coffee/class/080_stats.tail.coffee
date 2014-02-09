@@ -1,6 +1,5 @@
-root = window
 
-root.Stats = class Stats
+angoolar.Stats = class Stats
 
 	constructor: (
 		@$injector # this has to come from whatever scope that might expect to be re-digested when its deferreds are resolved/rejected/notified

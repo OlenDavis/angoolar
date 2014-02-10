@@ -7,7 +7,7 @@ angoolar.argumentsToArray = ( args ) ->
 angoolar.prototypallyExtendPropertyObject = ( target, propertyName ) ->
 	if target.constructor.__super__? # If the target has a parent class
 		angular.extend(
-			prototypallyExtendPropertyObject( target.constructor.__super__, propertyName )
+			angoolar.prototypallyExtendPropertyObject( target.constructor.__super__, propertyName )
 			target.constructor::[ propertyName ] or {}
 		)
 	else
@@ -16,7 +16,7 @@ angoolar.prototypallyExtendPropertyObject = ( target, propertyName ) ->
 angoolar.prototypallyMergePropertyArray = ( target, propertyName ) ->
 	if target.constructor.__super__? # If the target has a parent class
 		_.union(
-			prototypallyMergePropertyArray( target.constructor.__super__, propertyName )
+			angoolar.prototypallyMergePropertyArray( target.constructor.__super__, propertyName )
 			target.constructor::[ propertyName ] or new Array()
 		)
 	else

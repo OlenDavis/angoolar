@@ -1,15 +1,10 @@
 
 angoolar.BaseConfigBlock = class BaseConfigBlock extends angoolar.BaseBlock
 
-	$_dependencies: [ '$httpProvider', '$interpolateProvider', '$sceProvider' ]
+	$_dependencies: [ '$httpProvider' ]
 
 	constructor: ->
 		super
-
-		@$interpolateProvider.startSymbol '{[{'
-		@$interpolateProvider.endSymbol   '}]}'
-
-		@$sceProvider.enabled no # without this, we wouldn't be able to request anything through $http that wasn't here whitelisted; for the sheer joy of laziness, 'tis simply disabled
 		
 		@setupInterceptors()
 

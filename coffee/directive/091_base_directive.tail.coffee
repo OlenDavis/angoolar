@@ -42,8 +42,8 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 
 		# Handle the scope property
 		# Check for the special $_self scope attribute if the directive's restrict doesn't include 'E' - i.e. if the directive can't be for an element
-		if @restrict?.indexOf( 'E' ) is -1 and @scope?.$_self?
-			@scope[ @$_makeName ] = @scope.$_self
+		if @scope?.$_self? and ( not @restrict? or @restrict.indexOf( 'E' ) is -1 )
+			@scope[ @$_makeName() ] = @scope.$_self
 			@$_selfScopeAttribute = @scope.$_self.match( /^@?=?&?\??\s*(.*)\s*$/ )[ 1 ] or @$_makeName()
 			angoolar.delete @scope, '$_self'
 
@@ -117,7 +117,7 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 			else if angular.isString( @require )
 				directiveController[ @require.match( modifierMatchRegex )?[ 1 ] ] = controller
 
-		if @$_hasSelf
+		if @$_selfScopeAttribute
 			scope.$watch @$_selfScopeAttribute, ( selfScopeAttribute ) -> scope.$_self = selfScopeAttribute
 
 	link   : ( scope, iElement, iAttrs, controller ) => # called once for each instance of the directive after its content has been Angular-$compile'd; this is where to do any DOM manipulation specific to each instance of the directive.

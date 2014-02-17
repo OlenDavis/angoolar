@@ -1,3 +1,7 @@
+angoolar.$window   = angular.element window
+angoolar.$document = angular.element document
+angoolar.$html     = angular.element document.documentElement
+
 # This is merely a utility that takes an arguments parameter (the special object arguments, which is neither an object nor an array), and converts it to an actual array (with prototypal methods like splice and slice)
 angoolar.argumentsToArray = ( args ) ->
 	array = new Array()

@@ -4,7 +4,7 @@
 angoolar.BaseTemplatedDirective = class BaseTemplatedDirective extends angoolar.BaseDirective
 	# $_name: "BaseDirective" # This must be overriden in extending directives
 
-	restrict: 'E'
+	restrict: 'AE'
 	replace : yes
 
 	$_makeAngularDefinition: ->

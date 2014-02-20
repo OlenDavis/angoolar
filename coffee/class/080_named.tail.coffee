@@ -17,7 +17,7 @@ angoolar.Named = class Named
 	# instance.
 	$_checkName: ->
 		unless @$_name? and _.has @, "$_name"
-			throw new Error "Cannot add injectable, #{ @constructor.name }, to the given module because it doesn't define its own $_name."
+			throw new Error "Cannot use, #{ @constructor.name }, here because it doesn't define its $_name is #{ $_name }."
 
 	# Anywhere this is referred to in code, it should be referred to as the result of this function, 
 	# merely $_name.

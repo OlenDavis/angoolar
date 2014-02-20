@@ -16,8 +16,8 @@ angoolar.Named = class Named
 	# When attaching this to Angular, we call this to ensure that $_name is actually defined on this
 	# instance.
 	$_checkName: ->
-		unless @$_name? and _.has @, "$_name"
-			throw new Error "Cannot use, #{ @constructor.name }, here because it doesn't define its $_name is #{ $_name }."
+		unless @$_name? and ( @constructor::? and _.has @constructor::, "$_name" ) or ( _.has @, "$_name" )
+			throw new Error "Cannot add injectable, #{ @constructor.name }, to the given module because it doesn't define its own $_name."
 
 	# Anywhere this is referred to in code, it should be referred to as the result of this function, 
 	# merely $_name.

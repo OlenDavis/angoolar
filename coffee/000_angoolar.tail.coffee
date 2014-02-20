@@ -1,27 +1,24 @@
-angoolar.moduleConstructors = {}
-
-angoolar.modules = {}
+angoolar.modules = {} # a hash by $_name (not $_makeName )
 
 targetModuleNames = new Array()
 
-targetModuleIndex = ( module ) ->
-	_.indexOf targetModuleNames, module::$_makeName()
+targetModuleIndex = ( moduleConstructor ) ->
+	_.indexOf targetModuleNames, moduleConstructor::$_name
 
-angoolar.setTargetModule = ( module ) ->
-	targetModuleNames.push module::$_makeName() if -1 is targetModuleIndex module
+angoolar.setTargetModule = ( moduleConstructor ) ->
+	targetModuleNames.push moduleConstructor::$_name if -1 is targetModuleIndex moduleConstructor
 
-angoolar.unsetTargetModule = ( module ) ->
-	targetModuleNames.splice moduleIndex, 1 unless -1 is targetModuleIndex module
+angoolar.unsetTargetModule = ( moduleConstructor ) ->
+	targetModuleNames.splice moduleIndex, 1 unless -1 is targetModuleIndex moduleConstructor
 
-angoolar.addModule = ( module ) ->
-	angoolar.moduleConstructors[ module::$_makeName() ] = module
+angoolar.addModule = ( moduleConstructor, andSetAsTarget = yes ) ->
+	angoolar.modules[ moduleConstructor::$_name ] = new moduleConstructor()
+	angoolar.setTargetModule moduleConstructor if andSetAsTarget
 
-angoolar.getTargetModules = () ->
-	targetModuleNames
-
-angoolar.addController  = ( controller ) -> angoolar.moduleConstructors[ targetModule ]::addController  controller for targetModule in targetModuleNames
-angoolar.addDirective   = ( directive  ) -> angoolar.moduleConstructors[ targetModule ]::addDirective   directive  for targetModule in targetModuleNames
-angoolar.addFactory     = ( factory    ) -> angoolar.moduleConstructors[ targetModule ]::addFactory     factory    for targetModule in targetModuleNames
-angoolar.addFilter      = ( filter     ) -> angoolar.moduleConstructors[ targetModule ]::addFilter      filter     for targetModule in targetModuleNames
-angoolar.addRunBlock    = ( block      ) -> angoolar.moduleConstructors[ targetModule ]::addRunBlock    block      for targetModule in targetModuleNames
-angoolar.addConfigBlock = ( block      ) -> angoolar.moduleConstructors[ targetModule ]::addConfigBlock block      for targetModule in targetModuleNames
+# When adding a component, you must specify the component's class/constructor function, and optionally, a target module to specifically add it to (otherwise, all current target modules will receive the new component).
+angoolar.addController  = ( controllerConstructor, targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addController  controllerConstructor for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addController  controllerConstructor
+angoolar.addDirective   = ( directiveConstructor , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addDirective   directiveConstructor  for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addDirective   directiveConstructor
+angoolar.addFactory     = ( factoryConstructor   , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addFactory     factoryConstructor    for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addFactory     factoryConstructor
+angoolar.addFilter      = ( filterConstructor    , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addFilter      filterConstructor     for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addFilter      filterConstructor
+angoolar.addRunBlock    = ( blockConstructor     , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addRunBlock    blockConstructor      for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addRunBlock    blockConstructor
+angoolar.addConfigBlock = ( blockConstructor     , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addConfigBlock blockConstructor      for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addConfigBlock blockConstructor

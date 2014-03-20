@@ -6165,7 +6165,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
           var LOCAL_REGEXP = /^\s*([@=&])(\??)\s*(\w*)\s*$/;
           var $linkNode = jqLite(linkNode);
 
-          isolateScope = scope.$new(true);
+          isolateScope = scope.$new(!!!newIsolateScopeDirective.notIsolated);
 
           if (templateDirective && (templateDirective === newIsolateScopeDirective.$$originalDirective)) {
             $linkNode.data('$isolateScope', isolateScope) ;

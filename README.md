@@ -90,7 +90,7 @@ All custom filter factories
 e.g. Sum
 
 ### 5**_*.tail.js Angoolar Requesters
-All custom requester factories extending BaseRequester
+All factories that may need access to low-level factories, and may be needed by high level factories; e.g. requester factories extending BaseRequester or animation factories extending BaseAnimation
 e.g. Sum
 
 ### 6**_*.tail.js Angoolar High-level Factories

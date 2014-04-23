@@ -2,12 +2,13 @@
 angoolar.BaseModule = class BaseModule extends angoolar.Named
 	# $_name: "BaseModule" # Extending modules must declare their own names
 
-	configBlocks: new Array() # These must extend BaseConfigBlock,    and if defined, will each be instantiated upon module config
-	runBlocks   : new Array() # These must extend BaseRunBlock,       and if defined, will each be instantiated upon module run
-	factories   : new Array() # These must extend BaseFactory,    and if defined, will each be attached to the created module
-	filters     : new Array() # These must extend BaseFilter,     and if defined, will each be attached to the created module
-	directives  : new Array() # These must extend BaseDirective,  and if defined, will each be attached to the created module
-	controllers : new Array() # These must extend BaseController, and if defined, will each be attached to the created module
+	configBlocks: new Array() # These must extend BaseConfigBlock, and if defined, will each be instantiated upon module config
+	runBlocks   : new Array() # These must extend BaseRunBlock,    and if defined, will each be instantiated upon module run
+	factories   : new Array() # These must extend BaseFactory,     and if defined, will each be attached to the created module
+	filters     : new Array() # These must extend BaseFilter,      and if defined, will each be attached to the created module
+	directives  : new Array() # These must extend BaseDirective,   and if defined, will each be attached to the created module
+	controllers : new Array() # These must extend BaseController,  and if defined, will each be attached to the created module
+	animations  : new Array() # These must extend BaseAnimation,   and if defined, will each be attached to the created module
 
 	addConfigBlock: ( configBlock ) -> @configBlocks.push configBlock
 	addRunBlock   : ( runBlock    ) -> @runBlocks   .push runBlock
@@ -15,6 +16,7 @@ angoolar.BaseModule = class BaseModule extends angoolar.Named
 	addFilter     : ( filter      ) -> @filters     .push filter 
 	addDirective  : ( directive   ) -> @directives  .push directive
 	addController : ( controller  ) -> @controllers .push controller
+	addAnimation  : ( animation   ) -> @animations  .push animation
 
 	$_dependencies: [ 'ng' ]
 
@@ -31,6 +33,7 @@ angoolar.BaseModule = class BaseModule extends angoolar.Named
 		filter     ::$_addToAngular module for filter      in @filters
 		directive  ::$_addToAngular module for directive   in @directives
 		controller ::$_addToAngular module for controller  in @controllers
+		animation  ::$_addToAngular module for animation   in @animations
 
 		module
 

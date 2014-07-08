@@ -40,13 +40,6 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 		@scopeDefaults           = angoolar.prototypallyExtendPropertyObject @, 'scopeDefaults'           if @scopeDefaults?           and angular.isObject @scopeDefaults
 		@scopeDefaultExpressions = angoolar.prototypallyExtendPropertyObject @, 'scopeDefaultExpressions' if @scopeDefaultExpressions? and angular.isObject @scopeDefaultExpressions
 
-		# Handle the scope property
-		# Check for the special $_self scope attribute if the directive's restrict doesn't include 'E' - i.e. if the directive can't be for an element
-		if @scope?.$_self? and ( not @restrict? or @restrict.indexOf( 'E' ) is -1 )
-			@scope[ @$_makeName() ] = @scope.$_self
-			@$_selfScopeAttribute = @scope.$_self.match( /^@?=?&?\??\s*(.*)\s*$/ )[ 1 ] or @$_makeName()
-			angoolar.delete @scope, '$_self'
-
 		# Handle the require properties
 		# First, prototypally merge them
 		@$_requireSiblings = angoolar.prototypallyMergePropertyArray @, '$_requireSiblings' if @$_requireSiblings? and angular.isArray @$_requireSiblings
@@ -69,9 +62,9 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 					requireStrings.push requireDirective
 				else if angular.isObject requireDirective
 					if requireDirective.sibling?
-						requireStrings.push requireDirective.sibling::$_makeName()
+						requireStrings.push "?{ requireDirective.sibling::$_makeName() }"
 					else if requireDirective.parent?
-						requireStrings.push "^#{ requireDirective.parent::$_makeName() }"
+						requireStrings.push "^?#{ requireDirective.parent::$_makeName() }"
 
 		definition = {}
 
@@ -97,28 +90,26 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 
 		module.directive @$_makeName(), @$_makeConstructorArray()
 
+	modifierMatchRegex = /\??\^?([^\s]+)/
+	attachController = ( controller, attachTo, requireDirective ) ->
+		return unless controller?
+		actualName = ( requireDirective::controller?::$_name or requireDirective ).match( modifierMatchRegex )?[ 1 ]
+		attachTo[ actualName ] = controller if actualName?.length
+
 	# These methods are mostly what you'll want to customize when extending the BaseDirective
 	compile: ( tElement, tAttrs, transclude ) => # called only once when the directive's template element is created and modified before cloning.
 	preLink: ( scope, iElement, iAttrs, controller ) => # called once for each instance of the directive before each directive's template clone has been linked by the Angular $compile method
-		if @controller? and angular.isFunction( @controller ) and @require?
-			directiveController = scope[ @controller::$_name ]
+		if @require?
+			if @controller?::$_name
+				directiveController = scope[ @controller?::$_name ]
 
-			modifierMatchRegex = /\??\^?([^\s]+)/
-
-			if angular.isArray( @require )
-				for requireDirective, i in @require
-					directiveName =
-						if angular.isString requireDirective
-							requireDirective.match( modifierMatchRegex )?[ 1 ] # truncates the modifiers if any
-						else if angular.isObject requireDirective
-							( ( required = requireDirective.sibling or requireDirective.parent )::controller or required )::$_name
-
-					directiveController[ directiveName ] = controller[ i ] if directiveName?.length
-			else if angular.isString( @require )
-				directiveController[ @require.match( modifierMatchRegex )?[ 1 ] ] = controller
-
-		if @$_selfScopeAttribute
-			scope.$watch @$_selfScopeAttribute, ( selfScopeAttribute ) -> scope.$_self = selfScopeAttribute
+				if angular.isArray( @require )
+					for requireDirective, i in @require
+						attachController controller[ i ], directiveController, requireDirective
+				else
+					attachController directiveController, controller, @require
+			else
+				attachController scope, controller, @require
 
 	link   : ( scope, iElement, iAttrs, controller ) => # called once for each instance of the directive after its content has been Angular-$compile'd; this is where to do any DOM manipulation specific to each instance of the directive.
 		# Set up the defaults for each of the defaults declared for an interpolated isolated scope attribute (by interpolation, we mean '@')

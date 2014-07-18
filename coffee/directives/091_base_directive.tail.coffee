@@ -103,13 +103,17 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 			if @controller?::$_name
 				directiveController = scope[ @controller?::$_name ]
 
-				if angular.isArray( @require )
+				if angular.isArray @require
 					for requireDirective, i in @require
 						attachController controller[ i ], directiveController, requireDirective
 				else
-					attachController directiveController, controller, @require
+					attachController controller, directiveController, @require
 			else
-				attachController scope, controller, @require
+				if angular.isArray @require
+					for requireDirective, i in @require
+						attachController controller[ i ], scope, requireDirective
+				else
+					attachController controller, scope, @require
 
 	link   : ( scope, iElement, iAttrs, controller ) => # called once for each instance of the directive after its content has been Angular-$compile'd; this is where to do any DOM manipulation specific to each instance of the directive.
 		# Set up the defaults for each of the defaults declared for an interpolated isolated scope attribute (by interpolation, we mean '@')

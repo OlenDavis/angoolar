@@ -72,3 +72,7 @@ angoolar.camelToDashes = ( someText ) ->
 	someText?.
 		replace( /([a-z])([A-Z])/g, ( match, lowerPart, upperPart ) -> lowerPart + '-' + upperPart.toLowerCase() ).
 		toLowerCase()
+
+modifierMatchRegex = /\??\^?([^\s]+)/
+angoolar.getRequiredDirectiveControllerName = ( givenRequireDirective ) ->
+	( givenRequireDirective::controller?::$_name or givenRequireDirective ).match( modifierMatchRegex )?[ 1 ]

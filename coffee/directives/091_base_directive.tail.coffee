@@ -90,10 +90,9 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 
 		module.directive @$_makeName(), @$_makeConstructorArray()
 
-	modifierMatchRegex = /\??\^?([^\s]+)/
 	attachController = ( controller, attachTo, requireDirective ) ->
 		return unless controller?
-		actualName = ( ( requireDirective.parent or requireDirective.sibling )?::controller?::$_name or requireDirective ).match( modifierMatchRegex )?[ 1 ]
+		actualName = angoolar.getRequiredDirectiveControllerName( requireDirective.parent or requireDirective.sibling or requireDirective )
 		attachTo[ actualName ] = controller if actualName?.length
 
 	# These methods are mostly what you'll want to customize when extending the BaseDirective

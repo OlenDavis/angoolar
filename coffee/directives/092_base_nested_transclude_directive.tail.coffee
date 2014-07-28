@@ -5,7 +5,7 @@ angoolar.BaseNestedTranscludeDirective = class BaseNestedTranscludeDirective ext
 	$_makeAngularDefinition: ->
 		if @$_nestedTranscludeOf?
 			@$_requireParents.push @$_nestedTranscludeOf
-			@::controller::$_nestedTranscludeOfController = angoolar.getRequiredDirectiveControllerName @$_nestedTranscludeOf
+			@controller::$_nestedTranscludeOfController = angoolar.getRequiredDirectiveControllerName @$_nestedTranscludeOf
 		else
 			throw new Error "A $_nestedTranscludeOf must be declared on a directive extending BaseNestedTranscludeDirective to function correctly."
 

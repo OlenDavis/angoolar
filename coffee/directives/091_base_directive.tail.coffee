@@ -62,7 +62,7 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 					requireStrings.push requireDirective
 				else if angular.isObject requireDirective
 					if requireDirective.sibling?
-						requireStrings.push "?{ requireDirective.sibling::$_makeName() }"
+						requireStrings.push "?#{ requireDirective.sibling::$_makeName() }"
 					else if requireDirective.parent?
 						requireStrings.push "^?#{ requireDirective.parent::$_makeName() }"
 

@@ -7,6 +7,8 @@ angoolar.BaseTemplatedDirective = class BaseTemplatedDirective extends angoolar.
 	restrict: 'AE'
 	replace : yes
 
+	$_addClass: yes
+
 	$_makeAngularDefinition: ->
 		unless @templateUrl?
 			@templateUrl = "#{ angoolar.camelToDashes @$_name }.html"
@@ -16,4 +18,4 @@ angoolar.BaseTemplatedDirective = class BaseTemplatedDirective extends angoolar.
 	compile: ( tElement ) ->
 		super
 
-		tElement.addClass angoolar.camelToDashes @$_name
+		tElement.addClass angoolar.camelToDashes @$_name if @$_addClass

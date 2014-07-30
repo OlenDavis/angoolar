@@ -3,6 +3,15 @@ angoolar.BaseNestedTranscludeDirective = class BaseNestedTranscludeDirective ext
 	$_nestedTranscludeOf: null # this must be overridden with the directive to be used as the parent transcluding directive to transclude here
 
 	$_makeAngularDefinition: ->
+		@controller = class BaseNestedTranscludeDirectiveController extends angoolar.BaseDirectiveController
+			$_name: 'BaseNestedTranscludeDirectiveController'
+
+			$_link: ->
+				super
+
+				@[ @$_nestedTranscludeOfController ].$transclude ( $contents ) =>
+					@$element.append $contents
+
 		if @$_nestedTranscludeOf?
 			@$_requireParents.push @$_nestedTranscludeOf
 			@controller::$_nestedTranscludeOfController = angoolar.getRequiredDirectiveControllerName @$_nestedTranscludeOf
@@ -10,12 +19,3 @@ angoolar.BaseNestedTranscludeDirective = class BaseNestedTranscludeDirective ext
 			throw new Error "A $_nestedTranscludeOf must be declared on a directive extending BaseNestedTranscludeDirective to function correctly."
 
 		super
-
-	controller: class BaseNestedTranscludeDirectiveController extends angoolar.BaseDirectiveController
-		$_name: 'BaseNestedTranscludeDirectiveController'
-
-		$_link: ->
-			super
-
-			@[ @$_nestedTranscludeOfController ].$transclude ( $contents ) =>
-				@$element.append $contents

@@ -25,7 +25,9 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 	# $_makeName function has to be modified from the simple concatenation of controllers' prefixing
 	# to enforce that all custom directives follow this standard (otherwise, Angular might silently do
 	# nothing about our directives).
-	$_makeName: -> @$_prefix + if @$_prefix.length is 0 then @$_name.slice( 0, 1 ).toLowerCase() + @$_name.slice 1 else @$_name
+	$_makeName: ->
+		prefix = @$_prefix or ''
+		prefix + if prefix.length is 0 then @$_name.slice( 0, 1 ).toLowerCase() + @$_name.slice 1 else @$_name
 
 	$_dependentConstructor: ->
 		directive = super

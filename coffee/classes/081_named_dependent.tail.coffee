@@ -6,7 +6,7 @@ angoolar.NamedDependent = class NamedDependent extends angoolar.Named
 	constructor: ->
 		if @$_attachDependencies
 			for dependency, dependencyIndex in arguments
-				@[ dependency.$_name or @$_dependencies[ dependencyIndex ] ] = dependency
+				@[ dependency?.$_name or @$_dependencies[ dependencyIndex ] ] = dependency
 
 	$_getDependencyStringArray: ( dependencies ) ->
 		stringDependencies = new Array()

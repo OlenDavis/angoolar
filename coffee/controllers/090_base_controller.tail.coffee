@@ -1,4 +1,3 @@
-
 angoolar.BaseController = class BaseController extends angoolar.AutoAttachableDependent
 	# $_name: "BaseController" # Your extending BaseController *must* declare its own $_name property to function - this is due to minification
 

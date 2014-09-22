@@ -30,6 +30,6 @@ angoolar.NamedDependent = class NamedDependent extends angoolar.Named
 
 	$_makeConstructorArray: ->
 		constructorArray = @$_getDependencyStringArray @$_makeDependencyArray()
-		constructorArray.push @$_dependentConstructor or @constructor
+		constructorArray.push if @$_dependentConstructor then ( => @$_dependentConstructor() ) else @constructor
 
 		constructorArray

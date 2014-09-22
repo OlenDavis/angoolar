@@ -26,8 +26,8 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 	# to enforce that all custom directives follow this standard (otherwise, Angular might silently do
 	# nothing about our directives).
 	$_makeName: ->
-		prefix = @$_prefix or ''
-		prefix + if prefix.length is 0 then @$_name.slice( 0, 1 ).toLowerCase() + @$_name.slice 1 else @$_name
+		name = super
+		name.slice( 0, 1 ).toLowerCase() + name.slice 1
 
 	$_dependentConstructor: ->
 		directive = new @constructor arguments...

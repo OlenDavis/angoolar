@@ -22,7 +22,7 @@ angoolar.Named = class Named
 	# Anywhere this is referred to in code, it should be referred to as the result of this function, 
 	# merely $_name.
 	$_makeName: ->
-		@$_prefix + @$_name
+		( @$_prefix or '' ) + @$_name
 
 	# For convenience and clarity, this is placed here
 	$_addToAngular: ->

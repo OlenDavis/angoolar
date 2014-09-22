@@ -30,7 +30,7 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 		prefix + if prefix.length is 0 then @$_name.slice( 0, 1 ).toLowerCase() + @$_name.slice 1 else @$_name
 
 	$_dependentConstructor: ->
-		directive = super
+		directive = new @constructor arguments...
 		return directive.$_makeAngularDefinition()
 
 	$_requireSiblings: [] # if this is undefined, the directive won't be able to find its own controller if it's defined; but even if you don't have a controller defined for your directive, this won't cause an error. If you want to inject other controllers, be sure to use an array of the controllers' strings and keep this "?" entry in the first spot

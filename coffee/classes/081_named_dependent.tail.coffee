@@ -26,10 +26,10 @@ angoolar.NamedDependent = class NamedDependent extends angoolar.Named
 
 		@$_dependencies.slice 0 # this ensures the dependency array is merely a copy (and adding the return value of makeDependentConstructor to it won't inadvertently add it to the prototypal $_dependencies array)
 
-	$_dependentConstructor: @constructor
+	# $_dependentConstructor: -> new @constructor arguments... # Override this to use something other than this components constructor as the actual constructor for it.
 
 	$_makeConstructorArray: ->
 		constructorArray = @$_getDependencyStringArray @$_makeDependencyArray()
-		constructorArray.push @$_dependentConstructor
+		constructorArray.push @$_dependentConstructor or @constructor
 
 		constructorArray

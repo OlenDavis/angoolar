@@ -40,4 +40,22 @@ angoolar.BaseConfigBlock = class BaseConfigBlock extends angoolar.BaseBlock
 		super
 		module.config @$_makeConstructorArray()
 
+	# Override the building of the dependency array, so that we can inject our own custom
+	# providers. These dependencies are injected by simply adding 'Provider' to the end of
+	# the string returned by $_makeName()
+	$_getDependencyStringArray: ( dependencies ) ->
+		super
+
+		stringDependencies = new Array()
+		stringDependencies = for dependency, i in dependencies
+			if angular.isString dependency
+				dependency
+			else
+				try
+					dependency::$_makeName().concat 'Provider'
+				catch
+					throw new Error "The dependency at index #{ i } of #{ @constructor.name }'s $_dependencies cannot be depended upon as its name cannot be made."
+
+		stringDependencies
+
 # angoolar.addConfigBlock BaseConfigBlock # This will add the given block to the target module(s)

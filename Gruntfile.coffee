@@ -58,6 +58,11 @@ module.exports = ( grunt ) ->
 		phantomcss       :
 			screenshotsDir: "screenshots"
 			resultsDir    : "results"
+		watchScss        : "grunt doScss"
+		watchCoffee      : "grunt doCoffee"
+		watchStatics     : "grunt doStatics"
+		watchHtmlTarget  : "grunt doHtmlTarget"
+		# postwatch      : "ant frontend-web-deploy"
 		applicationConfig:
 			development:
 				type               : "development"
@@ -525,22 +530,26 @@ module.exports = ( grunt ) ->
 			options:
 				livereload       : yes # packageJson.liveReloadPort
 				verbose          : yes
-				interrupt        : yes
 				livereloadOnError: no
 			scss:
 				files: [ '**/<%= pkg.scssDir %>/**/*.scss', '**/<%= pkg.cssDir %>/**/*.css', '!<%= pkg.buildDir %>/**/*' ]
-				tasks: [ 'scss_<%= pkg.applicationConfig[ pkg.environment ].type %>', 'postwatch' ]
+				tasks: [ 'watchScss', 'postwatch' ]
 			coffee:
 				files: [ '**/<%= pkg.coffeeDir %>/**/*.coffee', '**/<%= pkg.templatesDir %>/**/*.html', '!<%= pkg.buildDir %>/**/*' ]
-				tasks: [ 'coffee_<%= pkg.applicationConfig[ pkg.environment ].type %>', 'postwatch' ]
+				tasks: [ 'watchCoffee', 'postwatch' ]
 			statics:
 				files: [ '**/<%= pkg.jsDir %>/**/*.js', '**/<%= pkg.cssDir %>/**/*.css', '**/<%= pkg.fontsDir %>/**/*', '**/<%= pkg.imagesDir %>/**/*', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
-				tasks: [ 'copy:prepFonts', 'copy:prepImages', 'copy:buildJs', 'copy:buildCss', 'copy:buildFonts', 'copy:buildImages', 'copy:buildTemplates', 'ngtemplates', 'concat', 'htmlbuild:<%= pkg.applicationConfig[ pkg.environment ].type %>', 'postwatch' ]
+				tasks: [ 'watchStatics', 'postwatch' ]
 			htmlTarget:
-				files: [ '<%= pkg.htmlTarget %>' ]
-				tasks: [ 'preprocess', 'htmlbuild:<%= pkg.applicationConfig[ pkg.environment ].type %>', 'postwatch' ]
+				files: [ '<%= pkg.htmlTarget %>', 'postwatch' ]
+				tasks: [ 'watchHtmlTarget', 'postwatch' ]
 
-		shell: postwatch: command: packageJson.postwatch
+		shell:
+			watchScss      : command: packageJson.watchScss
+			watchCoffee    : command: packageJson.watchCoffee
+			watchStatics   : command: packageJson.watchStatics
+			watchHtmlTarget: command: packageJson.watchHtmlTarget
+			postwatch      : command: packageJson.postwatch
 
 	grunt.loadNpmTasks 'grunt-contrib-copy'
 	grunt.loadNpmTasks 'grunt-contrib-clean'
@@ -601,20 +610,27 @@ module.exports = ( grunt ) ->
 
 	grunt.registerTask 'default', tasksByType[ packageJson.applicationConfig[ packageJson.environment ].type ]
 
-	watchTasks =
-		scss_development: [ 'clean:scss', 'preprocess:prepScss', 'preprocess:prepCss', 'copy:buildCss', 'sass', 'concat:allCss', 'cssmin', 'bless', 'md5', 'htmlbuild:development' ]
-		scss_production : [ 'clean:scss', 'preprocess:prepScss', 'preprocess:prepCss', 'copy:buildCss', 'sass', 'concat:allCss', 'cssmin', 'bless', 'md5', 'htmlbuild:production'  ]
+	grunt.registerTask 'doScss', doScss = [ 'clean:scss', 'preprocess:prepScss', 'preprocess:prepCss', 'copy:buildCss', 'sass', 'concat:allCss', 'cssmin', 'bless', 'md5', "htmlbuild:#{ packageJson.applicationConfig[ packageJson.environment ].type }" ]
 
-		coffee_development: [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs',           'md5', 'htmlbuild:development' ]
-		coffee_production : [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs', 'uglify', 'md5', 'htmlbuild:production'  ]
+	grunt.registerTask 'doCoffeeDevelopment', doCoffeeDevelopment = [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs',           'md5', 'htmlbuild:development' ]
+	grunt.registerTask 'doCoffeeProduction',                        [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs', 'uglify', 'md5', 'htmlbuild:production'  ]
 
-	grunt.registerTask watchTasksName, tasks for watchTasksName, tasks of watchTasks
+	grunt.registerTask 'doCoffee', [ if packageJson.applicationConfig[ packageJson.environment ].type is 'development' then 'doCoffeeDevelopment' else 'doCoffeeProduction' ]
 
-	grunt.registerTask 'run-docco',      [ 'clean:docco', 'docco' ]
-	grunt.registerTask 'run-karma',      watchTasks.coffee_development.concat [ 'karma' ]
-	grunt.registerTask 'run-protractor', watchTasks.coffee_development.concat [ 'protractor' ]
-	grunt.registerTask 'run-phantomcss', watchTasks.coffee_development.concat [ 'phantomcss' ]
+	grunt.registerTask 'doStatics', doStatics = [ 'copy:prepFonts', 'copy:prepImages', 'copy:buildJs', 'copy:buildCss', 'copy:buildFonts', 'copy:buildImages', 'copy:buildTemplates', 'ngtemplates', 'concat', "htmlbuild:#{ packageJson.applicationConfig[ packageJson.environment ].type }" ]
 
-	grunt.registerTask 'postwatch', if packageJson.postwatch then [ 'shell:postwatch' ] else []
+	grunt.registerTask 'doHtmlTarget', doHtmlTarget = [ 'preprocess:htmlTarget', "htmlbuild:#{ packageJson.applicationConfig[ packageJson.environment ].type }" ]
+
+	grunt.registerTask 'doDocco', [ 'clean:docco', 'docco' ]
+
+	grunt.registerTask 'doKarma',      doCoffeeDevelopment.concat [ 'karma' ]
+	grunt.registerTask 'doProtractor', doCoffeeDevelopment.concat [ 'protractor' ]
+	grunt.registerTask 'doPhantomcss', doCoffeeDevelopment.concat [ 'phantomcss' ]
+
+	grunt.registerTask 'watchScss',       if packageJson.watchScss       then [ 'shell:watchScss'       ] else []
+	grunt.registerTask 'watchCoffee',     if packageJson.watchCoffee     then [ 'shell:watchCoffee'     ] else []
+	grunt.registerTask 'watchStatics',    if packageJson.watchStatics    then [ 'shell:watchStatics'    ] else []
+	grunt.registerTask 'watchHtmlTarget', if packageJson.watchHtmlTarget then [ 'shell:watchHtmlTarget' ] else []
+	grunt.registerTask 'postwatch',       if packageJson.postwatch       then [ 'shell:postwatch'       ] else []
 
 	grunt.log.writeln "Build environment: #{ packageJson.environment }, Build type: #{ packageJson.applicationConfig[ packageJson.environment ].type }"

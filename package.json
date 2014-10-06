@@ -60,23 +60,23 @@
 	"postall": "npm run test",
 
 	"prekarma": "npm install",
-	"karma"   : "grunt run-karma",
+	"karma"   : "grunt doKarma",
 
 	"prewebdriver-update": "npm install",
 	"webdriver-update"   : "./webdriver-manager-update.sh",
 	"preprotractor"      : "npm run webdriver-update",
-	"protractor"         : "grunt run-protractor",
+	"protractor"         : "grunt doProtractor",
 
 	"prephantomcss": "npm install",
-	"phantomcss"   : "grunt run-phantomcss",
+	"phantomcss"   : "grunt doPhantomcss",
 
 	"predocco": "npm install",
-	"docco"   : "grunt run-docco",
+	"docco"   : "grunt doDocco",
 
 	"prenew-phantomcss-baseline": "npm install",
-	"new-phantomcss-baseline"   : "grunt clean:phantomcss run-phantomcss",
+	"new-phantomcss-baseline"   : "grunt clean:phantomcss doPhantomcss",
 
 	"pretest": "npm run webdriver-update",
-	"test"   : "grunt -f run-karma phantomcss protractor"
+	"test"   : "grunt -f doKarma phantomcss protractor"
   }
 }

@@ -1,0 +1,81 @@
+{
+  "name": "angoolar",
+  "version": "0.7.1",
+  "description": "ANGööLAR ======== Putting the \"oOOoo\" in AngoOOoolar. Taking \"u\" to a land of object-oriented ease.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OlenDavis/angoolar.git"
+  },
+  "keywords": [
+    "Angular",
+    "Angoolar",
+    "Object",
+    "Oriented"
+  ],
+  "author": "Olen Davis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OlenDavis/angoolar/issues"
+  },
+  "homepage": "https://github.com/OlenDavis/angoolar",
+  "devDependencies": {
+	"bower"                    : "^1.3.12",
+	"extend"                   : "~1.3.0",
+	"grunt"                    : "^0.4.5",
+	"grunt-angular-templates"  : "~0.5.3",
+	"grunt-bless"              : "~0.1.1",
+	"grunt-contrib-clean"      : "~0.4.1",
+	"grunt-contrib-coffee"     : "~0.7.0",
+	"grunt-contrib-concat"     : "~0.3.0",
+	"grunt-contrib-copy"       : "~0.4.1",
+	"grunt-contrib-cssmin"     : "~0.6.1",
+	"grunt-contrib-sass"       : "~0.4.1",
+	"grunt-contrib-uglify"     : "~0.2.2",
+	"grunt-contrib-watch"      : "~0.4.4",
+	"grunt-debug-task"         : "^0.1.5",
+	"grunt-docco"              : "^0.3.3",
+	"grunt-html-build"         : "git+https://github.com/spatools/grunt-html-build.git#0.4.0",
+	"grunt-karma"              : "^0.9.0",
+	"grunt-md5"                : "~0.1.11",
+	"grunt-modernizr"          : "~0.4.1",
+	"grunt-phantomcss"         : "git+https://github.com/OlenDavis/grunt-phantomcss.git#ccaca1e7c83c6f54afbc4d1486d7e33b911af198",
+	"grunt-preprocess"         : "~2.3.0",
+	"grunt-protractor-runner"  : "~1.1.4",
+	"karma"                    : "^0.12.23",
+	"karma-chrome-launcher"    : "^0.1.4",
+	"karma-coffee-preprocessor": "~0.2.1",
+	"karma-coverage"           : "^0.2.6",
+	"karma-jasmine"            : "^0.1.5",
+	"karma-mocha-reporter"     : "^0.3.1",
+	"phantomjs"                : "^1.9.10"
+  },
+  "scripts": {
+	"postinstall": "bower install",
+
+	"prebuild": "npm install",
+	"build"   : "grunt",
+
+	"all"    : "npm run build",
+	"postall": "npm run test",
+
+	"prekarma": "npm install",
+	"karma"   : "grunt run-karma",
+
+	"prewebdriver-update": "npm install",
+	"webdriver-update"   : "./webdriver-manager-update.sh",
+	"preprotractor"      : "npm run webdriver-update",
+	"protractor"         : "grunt run-protractor",
+
+	"prephantomcss": "npm install",
+	"phantomcss"   : "grunt run-phantomcss",
+
+	"predocco": "npm install",
+	"docco"   : "grunt run-docco",
+
+	"prenew-phantomcss-baseline": "npm install",
+	"new-phantomcss-baseline"   : "grunt clean:phantomcss run-phantomcss",
+
+	"pretest": "npm run webdriver-update",
+	"test"   : "grunt -f run-karma phantomcss protractor"
+  }
+}

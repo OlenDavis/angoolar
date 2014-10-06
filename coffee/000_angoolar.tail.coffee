@@ -1,25 +1,35 @@
-angoolar.modules = {} # a hash by $_name (not $_makeName )
-
+modules           = {} # a hash by $_name (not $_makeName )
 targetModuleNames = new Array()
 
-targetModuleIndex = ( moduleConstructor ) ->
-	_.indexOf targetModuleNames, moduleConstructor::$_name
+targetModuleIndex = ( module ) ->
+	_.indexOf targetModuleNames, module::$_name
 
-angoolar.setTargetModule = ( moduleConstructor ) ->
-	targetModuleNames.push moduleConstructor::$_name if -1 is targetModuleIndex moduleConstructor
+angoolar.setTargetModule = ( module ) ->
+	targetModuleNames = [ module::$_name ]
 
-angoolar.unsetTargetModule = ( moduleConstructor ) ->
-	targetModuleNames.splice moduleIndex, 1 unless -1 is targetModuleIndex moduleConstructor
+angoolar.addTargetModule = ( module ) ->
+	targetModuleNames.push module::$_name if -1 is targetModuleIndex module
 
-angoolar.addModule = ( moduleConstructor, andSetAsTarget = yes ) ->
-	angoolar.modules[ moduleConstructor::$_name ] = new moduleConstructor()
-	angoolar.setTargetModule moduleConstructor if andSetAsTarget
+angoolar.removeTargetModule = ( module ) ->
+	targetModuleNames.splice moduleIndex, 1 unless -1 is targetModuleIndex module
+
+angoolar.addModule = ( module, andSetAsTarget = yes ) ->
+	modules[ module::$_name ] = new module()
+	angoolar.setTargetModule module if andSetAsTarget
+
+angoolar.flushModulesToAngular = ->
+	module.$_addToAngular() for moduleName, module of modules
+	modules           = {}
+	targetModuleNames = new Array()
+
+angoolar.callWithModule = ( callback ) ->
+	modules[ targetModuleName ].$_callWithModule callback for targetModuleName in targetModuleNames
 
 # When adding a component, you must specify the component's class/constructor function, and optionally, a target module to specifically add it to (otherwise, all current target modules will receive the new component).
-angoolar.addController  = ( controllerConstructor, targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addController  controllerConstructor for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addController  controllerConstructor
-angoolar.addDirective   = ( directiveConstructor , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addDirective   directiveConstructor  for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addDirective   directiveConstructor
-angoolar.addFactory     = ( factoryConstructor   , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addFactory     factoryConstructor    for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addFactory     factoryConstructor
-angoolar.addFilter      = ( filterConstructor    , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addFilter      filterConstructor     for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addFilter      filterConstructor
-angoolar.addRunBlock    = ( blockConstructor     , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addRunBlock    blockConstructor      for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addRunBlock    blockConstructor
-angoolar.addConfigBlock = ( blockConstructor     , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addConfigBlock blockConstructor      for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addConfigBlock blockConstructor
-angoolar.addAnimation   = ( animationConstructor , targetModule ) -> unless targetModule? then angoolar.modules[ targetModuleName ].addConfigBlock animationConstructor  for targetModuleName in targetModuleNames else angoolar.modules[ ( targetModule:: || targetModule ).$_name ].addAnimation   animationConstructor
+angoolar.addController  = ( controller, targetModule ) -> unless targetModule? then modules[ targetModuleName ].addController  controller for targetModuleName in targetModuleNames else modules[ ( targetModule:: || targetModule ).$_name ].addController  controller
+angoolar.addDirective   = ( directive , targetModule ) -> unless targetModule? then modules[ targetModuleName ].addDirective   directive  for targetModuleName in targetModuleNames else modules[ ( targetModule:: || targetModule ).$_name ].addDirective   directive
+angoolar.addFactory     = ( factory   , targetModule ) -> unless targetModule? then modules[ targetModuleName ].addFactory     factory    for targetModuleName in targetModuleNames else modules[ ( targetModule:: || targetModule ).$_name ].addFactory     factory
+angoolar.addFilter      = ( filter    , targetModule ) -> unless targetModule? then modules[ targetModuleName ].addFilter      filter     for targetModuleName in targetModuleNames else modules[ ( targetModule:: || targetModule ).$_name ].addFilter      filter
+angoolar.addRunBlock    = ( block     , targetModule ) -> unless targetModule? then modules[ targetModuleName ].addRunBlock    block      for targetModuleName in targetModuleNames else modules[ ( targetModule:: || targetModule ).$_name ].addRunBlock    block
+angoolar.addConfigBlock = ( block     , targetModule ) -> unless targetModule? then modules[ targetModuleName ].addConfigBlock block      for targetModuleName in targetModuleNames else modules[ ( targetModule:: || targetModule ).$_name ].addConfigBlock block
+angoolar.addAnimation   = ( animation , targetModule ) -> unless targetModule? then modules[ targetModuleName ].addConfigBlock animation  for targetModuleName in targetModuleNames else modules[ ( targetModule:: || targetModule ).$_name ].addAnimation   animation

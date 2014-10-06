@@ -41,6 +41,7 @@
 	"grunt-phantomcss"         : "git+https://github.com/OlenDavis/grunt-phantomcss.git#ccaca1e7c83c6f54afbc4d1486d7e33b911af198",
 	"grunt-preprocess"         : "~2.3.0",
 	"grunt-protractor-runner"  : "~1.1.4",
+	"grunt-shell"              : "^1.1.1",
 	"karma"                    : "^0.12.23",
 	"karma-chrome-launcher"    : "^0.1.4",
 	"karma-coffee-preprocessor": "~0.2.1",
@@ -50,7 +51,7 @@
 	"phantomjs"                : "^1.9.10"
   },
   "scripts": {
-	"postinstall": "bower install",
+    "postinstall": "bower install",
 
 	"prebuild": "npm install",
 	"build"   : "grunt",

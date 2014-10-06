@@ -22,13 +22,8 @@
   "license": "MIT",
   "homepage": "http://angoolar.com",
   "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "protractor",
     "examples",
     "karma_coverage",
-    "documentation",
     "*.*"
   ],
   "devDependencies": {

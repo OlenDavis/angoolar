@@ -41,7 +41,6 @@ module.exports = ( grunt ) ->
 		templatesDir     : "templates"
 		directivesDir    : "directives"
 		viewsDir         : "views"
-		protractorDir    : "protractor"
 		taxonomyDir      : "bower_components/angoolar-css-taxonomy"
 		headSuffix       : "head"
 		tailSuffix       : "tail"
@@ -284,7 +283,7 @@ module.exports = ( grunt ) ->
 			prepTemplates : files: [ prepDirectiveTemplates, prepViewTemplates ]
 
 		modernizr:
-			outputFile: '<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.jsDir %>/modernizr.<%= pkg.headSuffix %>.js'
+			outputFile: '<%= pkg.buildDir %>/<%= pkg.builtDir %>/<%= pkg.jsDir %>/modernizr.<%= pkg.headSuffix %>.js'
 			uglify    : yes
 			parseFiles: no
 			extra     :
@@ -524,23 +523,24 @@ module.exports = ( grunt ) ->
 
 		watch:
 			options:
-				livereload: yes # packageJson.liveReloadPort
-				verbose   : yes
-			gruntfile:
-				files: [ 'Gruntfile.coffee', 'package.json' ]
-				tasks: [ '<%= pkg.environment %>' ]
+				livereload       : yes # packageJson.liveReloadPort
+				verbose          : yes
+				interrupt        : yes
+				livereloadOnError: no
 			scss:
 				files: [ '**/<%= pkg.scssDir %>/**/*.scss', '**/<%= pkg.cssDir %>/**/*.css', '!<%= pkg.buildDir %>/**/*' ]
-				tasks: [ 'scss_<%= pkg.applicationConfig[ pkg.environment ].type %>' ]
+				tasks: [ 'scss_<%= pkg.applicationConfig[ pkg.environment ].type %>', 'postwatch' ]
 			coffee:
 				files: [ '**/<%= pkg.coffeeDir %>/**/*.coffee', '**/<%= pkg.templatesDir %>/**/*.html', '!<%= pkg.buildDir %>/**/*' ]
-				tasks: [ 'coffee_<%= pkg.applicationConfig[ pkg.environment ].type %>' ]
+				tasks: [ 'coffee_<%= pkg.applicationConfig[ pkg.environment ].type %>', 'postwatch' ]
 			statics:
 				files: [ '**/<%= pkg.jsDir %>/**/*.js', '**/<%= pkg.cssDir %>/**/*.css', '**/<%= pkg.fontsDir %>/**/*', '**/<%= pkg.imagesDir %>/**/*', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
-				tasks: [ 'copy:prepFonts', 'copy:prepImages', 'copy:buildJs', 'copy:buildCss', 'copy:buildFonts', 'copy:buildImages', 'copy:buildTemplates', 'ngtemplates', 'concat', 'htmlbuild:<%= pkg.applicationConfig[ pkg.environment ].type %>' ]
+				tasks: [ 'copy:prepFonts', 'copy:prepImages', 'copy:buildJs', 'copy:buildCss', 'copy:buildFonts', 'copy:buildImages', 'copy:buildTemplates', 'ngtemplates', 'concat', 'htmlbuild:<%= pkg.applicationConfig[ pkg.environment ].type %>', 'postwatch' ]
 			htmlTarget:
 				files: [ '<%= pkg.htmlTarget %>' ]
-				tasks: [ 'preprocess', 'htmlbuild:<%= pkg.applicationConfig[ pkg.environment ].type %>' ]
+				tasks: [ 'preprocess', 'htmlbuild:<%= pkg.applicationConfig[ pkg.environment ].type %>', 'postwatch' ]
+
+		shell: postwatch: command: packageJson.postwatch
 
 	grunt.loadNpmTasks 'grunt-contrib-copy'
 	grunt.loadNpmTasks 'grunt-contrib-clean'
@@ -561,6 +561,7 @@ module.exports = ( grunt ) ->
 	grunt.loadNpmTasks 'grunt-docco'
 	grunt.loadNpmTasks 'grunt-phantomcss'
 	grunt.loadNpmTasks 'grunt-debug-task'
+	grunt.loadNpmTasks 'grunt-shell'
 
 	tasksByType = 
 		development: [ 
@@ -604,8 +605,8 @@ module.exports = ( grunt ) ->
 		scss_development: [ 'clean:scss', 'preprocess:prepScss', 'preprocess:prepCss', 'copy:buildCss', 'sass', 'concat:allCss', 'cssmin', 'bless', 'md5', 'htmlbuild:development' ]
 		scss_production : [ 'clean:scss', 'preprocess:prepScss', 'preprocess:prepCss', 'copy:buildCss', 'sass', 'concat:allCss', 'cssmin', 'bless', 'md5', 'htmlbuild:production'  ]
 
-		coffee_development: [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'modernizr', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs',           'md5', 'htmlbuild:development' ]
-		coffee_production : [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'modernizr', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs', 'uglify', 'md5', 'htmlbuild:production'  ]
+		coffee_development: [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs',           'md5', 'htmlbuild:development' ]
+		coffee_production : [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs', 'uglify', 'md5', 'htmlbuild:production'  ]
 
 	grunt.registerTask watchTasksName, tasks for watchTasksName, tasks of watchTasks
 
@@ -613,5 +614,7 @@ module.exports = ( grunt ) ->
 	grunt.registerTask 'run-karma',      watchTasks.coffee_development.concat [ 'karma' ]
 	grunt.registerTask 'run-protractor', watchTasks.coffee_development.concat [ 'protractor' ]
 	grunt.registerTask 'run-phantomcss', watchTasks.coffee_development.concat [ 'phantomcss' ]
+
+	grunt.registerTask 'postwatch', if packageJson.postwatch then [ 'shell:postwatch' ] else []
 
 	grunt.log.writeln "Build environment: #{ packageJson.environment }, Build type: #{ packageJson.applicationConfig[ packageJson.environment ].type }"

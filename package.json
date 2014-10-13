@@ -56,6 +56,9 @@
 	"prebuild": "npm install",
 	"build"   : "grunt",
 
+	"prewatch": "npm install",
+	"watch"   : "grunt watch",
+
 	"all"    : "npm run build",
 	"postall": "npm run test",
 
@@ -77,6 +80,6 @@
 	"new-phantomcss-baseline"   : "grunt clean:phantomcss doPhantomcss",
 
 	"pretest": "npm run webdriver-update",
-	"test"   : "grunt -f doKarma phantomcss protractor"
+	"test"   : "grunt -f test"
   }
 }

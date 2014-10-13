@@ -2,7 +2,8 @@
 bower_components
 build
 node_modules
-phantomcss/*/results
+#phantomcss/*/results
+phantomcss
 karma_coverage
 documentation
 protractor.conf.js

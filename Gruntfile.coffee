@@ -92,6 +92,14 @@ module.exports = ( grunt ) ->
 	packageJson.dashedPrefix = packageJson.dashedPrefix or if packageJson.prefix then "#{ packageJson.prefix }-" else ''
 	packageJson.ngApp        = packageJson.ngApp        or if packageJson.prefix then "#{ packageJson.prefix }#{ packageJson.name.slice( 0, 1 ).toUpperCase() + packageJson.name.slice( 1 ) }" else ''
 
+	ignoreFiles = [
+		'!node_modules/**/*',
+		'!<%= pkg.buildDir %>/**/*',
+		'!<%= pkg.documentationDir %>/**/*',
+		'!<%= pkg.phantomcssDir %>/**/*',
+		'!<%= pkg.coverageDir %>/**/*'
+	]
+
 	prepHtmlTarget =
 		expand : yes
 		flatten: yes
@@ -101,48 +109,48 @@ module.exports = ( grunt ) ->
 	prepCoffee =
 		expand : yes
 		flatten: yes
-		src    : [ '**/<%= pkg.coffeeDir %>/**/*.coffee', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
+		src    : [ '**/<%= pkg.coffeeDir %>/**/*.coffee' ].concat ignoreFiles
 		dest   : '<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.coffeeDir %>/'
 
 	prepJs =
 		expand : yes
 		flatten: yes
-		src    : [ '**/<%= pkg.jsDir %>/**/*.js', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
+		src    : [ '**/<%= pkg.jsDir %>/**/*.js' ].concat ignoreFiles
 		dest   : '<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.jsDir %>/'
 
 	prepCss =
 		expand : yes
 		flatten: yes
-		src    : [ '**/<%= pkg.cssDir %>/**/*.css', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
+		src    : [ '**/<%= pkg.cssDir %>/**/*.css' ].concat ignoreFiles
 		dest   : '<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.cssDir %>/'
 
 	prepFonts =
 		expand : yes
 		flatten: yes
-		src    : [ '**/<%= pkg.fontsDir %>/**/*', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
+		src    : [ '**/<%= pkg.fontsDir %>/**/*' ].concat ignoreFiles
 		dest   : '<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.fontsDir %>/'
 
 	prepImages =
 		expand : yes
 		flatten: yes
-		src    : [ '**/<%= pkg.imagesDir %>/**/*', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
+		src    : [ '**/<%= pkg.imagesDir %>/**/*' ].concat ignoreFiles
 		dest   : '<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.imagesDir %>/'
 
 	prepDirectiveTemplates =
 		expand : yes
 		flatten: yes
-		src    : [ '**/<%= pkg.templatesDir %>/<%= pkg.directivesDir %>/*.html', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
+		src    : [ '**/<%= pkg.templatesDir %>/<%= pkg.directivesDir %>/*.html' ].concat ignoreFiles
 		dest   : '<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.templatesDir %>/<%= pkg.directivesDir %>/'
 
 	prepViewTemplates =
 		expand : yes
 		flatten: yes
-		src    : [ '**/<%= pkg.templatesDir %>/<%= pkg.viewsDir %>/*.html', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
+		src    : [ '**/<%= pkg.templatesDir %>/<%= pkg.viewsDir %>/*.html' ].concat ignoreFiles
 		dest   : '<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.templatesDir %>/<%= pkg.viewsDir %>/'
 
 	prepScss =
 		expand : yes
-		src    : [ '**/<%= pkg.scssDir %>/**/*.scss', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
+		src    : [ '**/<%= pkg.scssDir %>/**/*.scss' ].concat ignoreFiles
 		dest   : '<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.scssDir %>'
 
 	buildCoffee = 
@@ -213,12 +221,12 @@ module.exports = ( grunt ) ->
 	allJsMD5       = "#{ packageJson.buildDir }/#{ packageJson.builtDir }/#{ packageJson.jsDir }/all-*.js"
 
 	builtCssHead    = "#{ packageJson.buildDir }/#{ packageJson.builtDir }/#{ packageJson.cssDir }/*.#{ packageJson.headSuffix }.css"
-	builtCssHeadMD5 = "#{ packageJson.cssDir }/*.#{ packageJson.headSuffix }-*.css"
+	builtCssHeadMD5 = "#{ packageJson.buildDir }/#{ packageJson.builtDir }/#{ packageJson.cssDir }/*.#{ packageJson.headSuffix }-*.css"
 
 	allCss      = "#{ packageJson.buildDir }/#{ packageJson.builtDir }/#{ packageJson.cssDir }/all.css"
-	allCssMD5   = "#{ packageJson.cssDir }/all-*.css"
+	allCssMD5   = "#{ packageJson.buildDir }/#{ packageJson.builtDir }/#{ packageJson.cssDir }/all-*.css"
 	allCssIE    = "#{ packageJson.buildDir }/#{ packageJson.builtDir }/#{ packageJson.cssDir }/all_ie.css"
-	allCssIEMD5 = "#{ packageJson.cssDir }/all_ie-*.css"
+	allCssIEMD5 = "#{ packageJson.buildDir }/#{ packageJson.builtDir }/#{ packageJson.cssDir }/all_ie-*.css"
 
 	builtJsKarma      = "#{ packageJson.buildDir }/#{ packageJson.builtDir }/#{ packageJson.jsDir }/*.#{ packageJson.karmaSuffix }.js"
 	builtJsProtractor = "#{ packageJson.buildDir }/#{ packageJson.builtDir }/#{ packageJson.jsDir }/*.#{ packageJson.protractorSuffix }.js"
@@ -372,8 +380,7 @@ module.exports = ( grunt ) ->
 					'<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/**/<%= pkg.scssDir %>'
 					'<%= pkg.buildDir %>/<%= pkg.almostBuiltDir %>/<%= pkg.scssDir %>/<%= pkg.taxonomyDir %>/<%= pkg.scssDir %>'
 				]
-				style   : 'condensed'
-				require : 'animation'
+				style: 'condensed'
 			dist: files: [ buildScssHead ]
 
 		concat:
@@ -515,8 +522,10 @@ module.exports = ( grunt ) ->
 				'!<%= pkg.buildDir %>/**/*'
 			]
 			options:
-				layout: 'parallel'
-				output: packageJson.documentationDir
+				layout  : 'parallel'
+				output  : packageJson.documentationDir
+				css     : 'docco.css'
+				template: 'docco.jst'
 
 		phantomcss:
 			desktop:
@@ -532,16 +541,16 @@ module.exports = ( grunt ) ->
 				verbose          : yes
 				livereloadOnError: no
 			scss:
-				files: [ '**/<%= pkg.scssDir %>/**/*.scss', '**/<%= pkg.cssDir %>/**/*.css', '!<%= pkg.buildDir %>/**/*' ]
+				files: [ '**/<%= pkg.scssDir %>/**/*.scss', '**/<%= pkg.cssDir %>/**/*.css' ].concat ignoreFiles
 				tasks: [ 'watchScss', 'postwatch' ]
 			coffee:
-				files: [ '**/<%= pkg.coffeeDir %>/**/*.coffee', '**/<%= pkg.templatesDir %>/**/*.html', '!<%= pkg.buildDir %>/**/*' ]
+				files: [ '**/<%= pkg.coffeeDir %>/**/*.coffee', '**/<%= pkg.templatesDir %>/**/*.html' ].concat ignoreFiles
 				tasks: [ 'watchCoffee', 'postwatch' ]
 			statics:
-				files: [ '**/<%= pkg.jsDir %>/**/*.js', '**/<%= pkg.cssDir %>/**/*.css', '**/<%= pkg.fontsDir %>/**/*', '**/<%= pkg.imagesDir %>/**/*', '!node_modules/**/*', '!<%= pkg.buildDir %>/**/*' ]
+				files: [ '**/<%= pkg.jsDir %>/**/*.js', '**/<%= pkg.cssDir %>/**/*.css', '**/<%= pkg.fontsDir %>/**/*', '**/<%= pkg.imagesDir %>/**/*' ].concat ignoreFiles
 				tasks: [ 'watchStatics', 'postwatch' ]
 			htmlTarget:
-				files: [ '<%= pkg.htmlTarget %>', 'postwatch' ]
+				files: [ '<%= pkg.htmlTarget %>' ]
 				tasks: [ 'watchHtmlTarget', 'postwatch' ]
 
 		shell:
@@ -610,22 +619,24 @@ module.exports = ( grunt ) ->
 
 	grunt.registerTask 'default', tasksByType[ packageJson.applicationConfig[ packageJson.environment ].type ]
 
-	grunt.registerTask 'doScss', doScss = [ 'clean:scss', 'preprocess:prepScss', 'preprocess:prepCss', 'copy:buildCss', 'sass', 'concat:allCss', 'cssmin', 'bless', 'md5', "htmlbuild:#{ packageJson.applicationConfig[ packageJson.environment ].type }" ]
+	grunt.registerTask 'doScss', doScss = [ 'clean:scss', 'preprocess:prepScss', 'preprocess:prepCss', 'copy:buildCss', 'sass', 'concat:allCss', 'cssmin', 'bless', 'md5', "htmlbuild:#{ packageJson.applicationConfig[ packageJson.environment ].type }", 'doDocco' ]
 
-	grunt.registerTask 'doCoffeeDevelopment', doCoffeeDevelopment = [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs',           'md5', 'htmlbuild:development' ]
-	grunt.registerTask 'doCoffeeProduction',                        [ 'clean:coffee', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs', 'uglify', 'md5', 'htmlbuild:production'  ]
+	grunt.registerTask 'doCoffeeDevelopment', doCoffeeDevelopment = [ 'clean:coffee', 'modernizr', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs',           'md5', 'htmlbuild:development', 'doDocco' ]
+	grunt.registerTask 'doCoffeeProduction',                        [ 'clean:coffee', 'modernizr', 'preprocess:prepCoffee', 'preprocess:prepJs', 'preprocess:prepTemplates', 'copy:buildJs', 'copy:buildTemplates', 'coffee', 'ngtemplates', 'concat:prettyHead', 'concat:prettyTail', 'concat:allPrettyJs', 'uglify', 'md5', 'htmlbuild:production',  'doDocco' ]
 
 	grunt.registerTask 'doCoffee', [ if packageJson.applicationConfig[ packageJson.environment ].type is 'development' then 'doCoffeeDevelopment' else 'doCoffeeProduction' ]
 
-	grunt.registerTask 'doStatics', doStatics = [ 'copy:prepFonts', 'copy:prepImages', 'copy:buildJs', 'copy:buildCss', 'copy:buildFonts', 'copy:buildImages', 'copy:buildTemplates', 'ngtemplates', 'concat', "htmlbuild:#{ packageJson.applicationConfig[ packageJson.environment ].type }" ]
+	grunt.registerTask 'doStatics', doStatics = [ 'copy:prepFonts', 'copy:prepImages', 'copy:buildJs', 'copy:buildCss', 'copy:buildFonts', 'copy:buildImages', 'copy:buildTemplates', 'ngtemplates', 'concat', "htmlbuild:#{ packageJson.applicationConfig[ packageJson.environment ].type }", 'doDocco' ]
 
-	grunt.registerTask 'doHtmlTarget', doHtmlTarget = [ 'preprocess:htmlTarget', "htmlbuild:#{ packageJson.applicationConfig[ packageJson.environment ].type }" ]
+	grunt.registerTask 'doHtmlTarget', doHtmlTarget = [ 'preprocess:htmlTarget', "htmlbuild:#{ packageJson.applicationConfig[ packageJson.environment ].type }", 'doDocco' ]
 
 	grunt.registerTask 'doDocco', [ 'clean:docco', 'docco' ]
 
 	grunt.registerTask 'doKarma',      doCoffeeDevelopment.concat [ 'karma' ]
 	grunt.registerTask 'doProtractor', doCoffeeDevelopment.concat [ 'protractor' ]
 	grunt.registerTask 'doPhantomcss', doCoffeeDevelopment.concat [ 'phantomcss' ]
+
+	grunt.registerTask 'test', doCoffeeDevelopment.concat [ 'karma', 'phantomcss', 'protractor' ]
 
 	grunt.registerTask 'watchScss',       if packageJson.watchScss       then [ 'shell:watchScss'       ] else []
 	grunt.registerTask 'watchCoffee',     if packageJson.watchCoffee     then [ 'shell:watchCoffee'     ] else []

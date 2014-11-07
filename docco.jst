@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title><%= title %></title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+	<link rel="stylesheet" media="all" href="<%= css %>" />
+	<script src="https://code.angularjs.org/1.3.0-rc.4/angular.js"></script>
+</head>
+<body ng-app="ng">
+	<div id="container">
+		<div id="background"></div>
+		<% if (sources.length > 1) { %>
+			<ul id="jump_to">
+				<li>
+					<a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+					<a class="small" href="javascript:void(0);">+</a>
+					<div id="jump_wrapper">
+					<div
+						id      ="jump_page"
+						ng-init ="
+							sources = [];
+							<% for (var i=0, l=sources.length; i<l; i++) { %>
+								<% var source = sources[i]; %>
+								sources.push( {
+									href : '<%= path.basename(destination(source)).replace('\'', '&apos;').replace('"', '&quot;') %>',
+									label: '<%= path.basename(source             ).replace('\'', '&apos;').replace('"', '&quot;') %>'
+								} );
+							<% } %>
+						"
+					>
+
+						<input
+							ng-model    ="filter"
+							style       ="width: 100%; display: block; margin: 0px;"
+							placeholder ="Filter Files"
+						/>
+
+						<a
+							ng-repeat ="source in sources | filter:filter | orderBy:'label'"
+							class     ="source"
+							ng-href   ="{{ source.href }}"
+						>
+							{{ source.label }}
+						</a>
+
+					</div>
+				</li>
+			</ul>
+		<% } %>
+		<ul class="sections">
+				<% if (!hasTitle) { %>
+					<li id="title">
+							<div class="annotation">
+									<h1><%= title %></h1>
+							</div>
+					</li>
+				<% } %>
+				<% for (var i=0, l=sections.length; i<l; i++) { %>
+				<% var section = sections[i]; %>
+				<li id="section-<%= i + 1 %>">
+						<div class="annotation">
+							<% heading = section.docsHtml.match(/^\s*<(h\d)>/) %>
+							<div class="pilwrap <%= heading ? 'for-' + heading[1] : '' %>">
+								<a class="pilcrow" href="#section-<%= i + 1 %>">&#182;</a>
+							</div>
+							<%= section.docsHtml %>
+						</div>
+						<% if (section.codeText.replace(/\s/gm, '') != '') { %>
+						<div class="content"><%= section.codeHtml %></div>
+						<% } %>
+				</li>
+				<% } %>
+		</ul>
+	</div>
+</body>
+</html>

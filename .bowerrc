@@ -1,5 +1,5 @@
 {
 	"scripts": {
-		"postinstall": "./install.sh"
+		"postinstall": "./postinstall.sh"
 	}
 }

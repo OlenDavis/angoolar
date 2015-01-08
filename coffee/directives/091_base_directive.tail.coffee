@@ -81,11 +81,13 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 		definition.controller  = @controller::$_makeConstructorArray()                     if @controller?
 		definition.notIsolated = @notIsolated                                              if @notIsolated?
 
-		definition.compile = => 
-			@compile arguments...
-			{ pre: @preLink, post: @link }
+		definition.compile = @$_compile
 
 		definition
+
+	$_compile: =>
+		@compile.apply @, arguments
+		{ pre: @preLink, post: @link }
 
 	$_addToAngular: ( module ) ->
 		super

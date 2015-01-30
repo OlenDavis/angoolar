@@ -66,7 +66,7 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 					if requireDirective.sibling?
 						requireStrings.push "?#{ requireDirective.sibling::$_makeName() }"
 					else if requireDirective.parent?
-						requireStrings.push "^?#{ requireDirective.parent::$_makeName() }"
+						requireStrings.push "^^?#{ requireDirective.parent::$_makeName() }"
 
 		definition = {}
 

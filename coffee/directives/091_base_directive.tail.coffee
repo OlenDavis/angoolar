@@ -118,11 +118,21 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 				else
 					attachController controller, scope, @require
 
-	link   : ( scope, iElement, iAttrs, controller ) => # called once for each instance of the directive after its content has been Angular-$compile'd; this is where to do any DOM manipulation specific to each instance of the directive.
+	link: ( scope, iElement, iAttrs, controller ) => # called once for each instance of the directive after its content has been Angular-$compile'd; this is where to do any DOM manipulation specific to each instance of the directive.
 		# Set up the defaults for each of the defaults declared for an interpolated isolated scope attribute (by interpolation, we mean '@')
 		# See https://groups.google.com/forum/#!msg/angular/3OsaV00UPYs/xJ_tuNru_P4J for an explanation
-		angular.forEach @scopeDefaultExpressions, ( defaultExpression, attribute ) => if @scope?[ attribute ]?.charAt() is '@' then iAttrs.$observe attribute, ( value ) => scope.$watch( defaultExpression, ( defaultValue ) -> scope[ attribute ] = defaultValue ) unless angular.isDefined value
-		angular.forEach @scopeDefaults          , ( defaultValue     , attribute ) => if @scope?[ attribute ]?.charAt() is '@' then iAttrs.$observe attribute, ( value ) =>                                                      scope[ attribute ] = defaultValue   unless angular.isDefined value
+		angular.forEach @scopeDefaultExpressions, ( defaultExpression, attribute ) =>
+			if @scope?[ attribute ]?.charAt() is '@'
+				defaultValue = null
+				scope.$watch defaultExpression, ( theDefaultValue ) ->
+					defaultValue = theDefaultValue
+					scope[ attribute ] = scope[ attribute ] or defaultValue
+				iAttrs.$observe attribute, ( value ) => scope[ attribute ] = value or defaultValue
+
+		angular.forEach @scopeDefaults, ( defaultValue, attribute ) =>
+			if @scope?[ attribute ]?.charAt() is '@'
+				scope[ attribute ] = scope[ attribute ] or defaultValue
+				iAttrs.$observe attribute, ( value ) => scope[ attribute ] = value or defaultValue
 
 		# for convenience in not having to setup a watch just to do some basic controller-driven initialization of the directive instance, here we call the $_link method on the controller inheriting BaseDirectiveController
 		scope[ @controller?::$_name ]?.$_link?()

@@ -126,7 +126,7 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 				defaultValue = null
 				scope.$watch defaultExpression, ( theDefaultValue ) ->
 					defaultValue = theDefaultValue
-					scope[ attribute ] = scope[ attribute ] or defaultValue
+					scope[ attribute ] = defaultValue
 				iAttrs.$observe attribute, ( value ) => scope[ attribute ] = value or defaultValue
 
 		angular.forEach @scopeDefaults, ( defaultValue, attribute ) =>

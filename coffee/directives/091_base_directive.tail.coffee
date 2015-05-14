@@ -119,15 +119,17 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 					attachController controller, scope, @require
 
 	link: ( scope, iElement, iAttrs, controller ) => # called once for each instance of the directive after its content has been Angular-$compile'd; this is where to do any DOM manipulation specific to each instance of the directive.
-		# Set up the defaults for each of the defaults declared for an interpolated isolated scope attribute (by interpolation, we mean '@')
+		# Set up the defaults for each of the defaults declared for any non-& isolated scope attribute (so interpolated, @ or two-way bound, =)
 		# See https://groups.google.com/forum/#!msg/angular/3OsaV00UPYs/xJ_tuNru_P4J for an explanation
-		angular.forEach @scopeDefaultExpressions, ( defaultExpression, attribute ) =>
-			if @scope?[ attribute ]?.charAt() is '@' and not iAttrs[ attribute ]
-				scope.$watch defaultExpression, ( defaultValue ) -> scope[ attribute ] = defaultValue
+		angular.forEach @scopeDefaultExpressions, ( defaultExpression, scopeAttribute ) =>
+			attribute = @scope?[ attribute ]?.match( /[@=]\??(\w*)/ )?[ 1 ] or scopeAttribute
+			if @scope?[ scopeAttribute ]?.charAt( 0 ) isnt '&' and not iAttrs[ attribute ]
+				scope.$watch defaultExpression, ( defaultValue ) -> scope[ scopeAttribute ] = defaultValue
 
-		angular.forEach @scopeDefaults, ( defaultValue, attribute ) =>
-			if @scope?[ attribute ]?.charAt() is '@' and not iAttrs[ attribute ]
-				scope[ attribute ] = defaultValue
+		angular.forEach @scopeDefaults, ( defaultValue, scopeAttribute ) =>
+			attribute = @scope?[ attribute ]?.match( /[@=]\??(\w*)/ )?[ 1 ] or scopeAttribute
+			if @scope?[ scopeAttribute ]?.charAt( 0 ) isnt '&' and not iAttrs[ attribute ]
+				scope[ scopeAttribute ] = defaultValue
 
 		# for convenience in not having to setup a watch just to do some basic controller-driven initialization of the directive instance, here we call the $_link method on the controller inheriting BaseDirectiveController
 		scope[ @controller?::$_name ]?.$_link?()

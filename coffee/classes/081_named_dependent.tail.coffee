@@ -17,7 +17,7 @@ angoolar.NamedDependent = class NamedDependent extends angoolar.Named
 				try
 					dependency::$_makeName()
 				catch
-					throw new Error "The dependency at index #{ i } of #{ @constructor.name }'s $_dependencies cannot be depended upon as its name cannot be made: #{ dependency.toString() }"
+					throw new Error "The dependency at index #{ i } of #{ @constructor.name }'s $_dependencies cannot be depended upon as its name cannot be made: #{ dependency?.toString() }"
 
 		stringDependencies
 

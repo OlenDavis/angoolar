@@ -22,15 +22,11 @@
   "license": "MIT",
   "homepage": "http://angoolar.com",
   "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "protractor",
     "examples",
     "karma_coverage",
-    "documentation"
+    "phantomcss"
   ],
   "devDependencies": {
-    "angular": "1.3.0-rc.2"
+    "angular": "1.4.0"
   }
 }

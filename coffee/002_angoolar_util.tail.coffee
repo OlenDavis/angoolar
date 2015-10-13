@@ -75,4 +75,4 @@ angoolar.camelToDashes = ( someText ) ->
 
 modifierMatchRegex = /\??\^?([^\s]+)/
 angoolar.getRequiredDirectiveControllerName = ( givenRequireDirective ) ->
-	( givenRequireDirective::controller?::$_name or givenRequireDirective ).match( modifierMatchRegex )?[ 1 ]
+	( givenRequireDirective.prototype?.controller?::$_name or givenRequireDirective ).match( modifierMatchRegex )?[ 1 ]

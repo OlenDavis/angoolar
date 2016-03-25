@@ -89,8 +89,8 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 				controllerName = controller?.$_name or @require
 				attachTo[ controllerName ] = controller
 			else if angular.isArray @require
-				for eachController in controller
-					controllerName = eachController?.$_name or eachController
+				for eachController, index in controller
+					controllerName = eachController?.$_name or @require[ index ]
 					attachTo[ controllerName ] = eachController
 			else if angular.isObject @require
 				for controllerName, eachController of controller

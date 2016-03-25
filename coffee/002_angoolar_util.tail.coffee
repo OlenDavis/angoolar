@@ -12,19 +12,19 @@ angoolar.prototypallyExtendPropertyObject = ( target, propertyName ) ->
 	if target.constructor.__super__? # If the target has a parent class
 		angular.extend(
 			angoolar.prototypallyExtendPropertyObject( target.constructor.__super__, propertyName )
-			target.constructor::[ propertyName ] or {}
+			if angular.isObject( target.constructor::[ propertyName ] ) then target.constructor::[ propertyName ] else {}
 		)
 	else
-		target.constructor::[ propertyName ] or {}
+		if angular.isObject( target.constructor::[ propertyName ] ) then target.constructor::[ propertyName ] else {}
 
 angoolar.prototypallyMergePropertyArray = ( target, propertyName ) ->
 	if target.constructor.__super__? # If the target has a parent class
 		_.union(
 			angoolar.prototypallyMergePropertyArray( target.constructor.__super__, propertyName )
-			target.constructor::[ propertyName ] or new Array()
+			if angular.isArray( target.constructor::[ propertyName ] ) then target.constructor::[ propertyName ] else []
 		)
 	else
-		target.constructor::[ propertyName ] or new Array()
+		if angular.isArray( target.constructor::[ propertyName ] ) then target.constructor::[ propertyName ] else []
 
 # IE8 and prior throws an error when calling delete on an object's property; so, set it to undefined and then ignore any error resulting from calling delete on the object property
 angoolar.delete = ( object, property ) ->
@@ -72,7 +72,3 @@ angoolar.camelToDashes = ( someText ) ->
 	someText?.
 		replace( /([a-z])([A-Z])/g, ( match, lowerPart, upperPart ) -> lowerPart + '-' + upperPart.toLowerCase() ).
 		toLowerCase()
-
-modifierMatchRegex = /\??\^?([^\s]+)/
-angoolar.getRequiredDirectiveControllerName = ( givenRequireDirective ) ->
-	( givenRequireDirective.prototype?.controller?::$_name or givenRequireDirective ).match( modifierMatchRegex )?[ 1 ]

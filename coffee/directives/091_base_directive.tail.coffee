@@ -8,7 +8,7 @@
 angoolar.BaseDirectiveController = class BaseDirectiveController extends angoolar.BaseController
 	# $_name: "BaseDirectiveController" # This must be overriden in extending directive controllers
 
-	$_dependencies: [ "$element", "$attrs", "$transclude" ]
+	$_dependencies: [ '$element', '$attrs', '$transclude' ]
 
 	# This is called when the directive has been linked; it's sort of a constructor-type method that's called once any setup in the directive's link function has taken place.
 	$_link: ->
@@ -33,8 +33,16 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 		directive = new @constructor arguments...
 		return directive.$_makeAngularDefinition()
 
-	$_requireSiblings: [] # if this is undefined, the directive won't be able to find its own controller if it's defined; but even if you don't have a controller defined for your directive, this won't cause an error. If you want to inject other controllers, be sure to use an array of the controllers' strings and keep this "?" entry in the first spot
-	$_requireParents : []
+	$_definitionProperties: [
+		'priority'
+		'template'
+		'replace'
+		'transclude'
+		'restrict'
+		'scope'
+		'notIsolated'
+		'require'
+	]
 
 	$_makeAngularDefinition: ->
 		# First prototypally extend the inheritable object properties
@@ -42,45 +50,19 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 		@scopeDefaults           = angoolar.prototypallyExtendPropertyObject @, 'scopeDefaults'           if @scopeDefaults?           and angular.isObject @scopeDefaults
 		@scopeDefaultExpressions = angoolar.prototypallyExtendPropertyObject @, 'scopeDefaultExpressions' if @scopeDefaultExpressions? and angular.isObject @scopeDefaultExpressions
 
-		# Handle the require properties
-		# First, prototypally merge them
-		@$_requireSiblings = angoolar.prototypallyMergePropertyArray @, '$_requireSiblings' if @$_requireSiblings? and angular.isArray @$_requireSiblings
-		@$_requireParents  = angoolar.prototypallyMergePropertyArray @, '$_requireParents'  if @$_requireParents?  and angular.isArray @$_requireParents
+		if angular.isArray @require
+			@require = angoolar.prototypallyMergePropertyArray @, 'require'
+		else if angular.isObject @require
+			@require = angoolar.prototypallyExtendPropertyObject @, 'require'
 
-		# Then go through them all, and construct the require property
-		if @$_requireSiblings?.length or @$_requireParents?.length
-			if @require?
-				@require = [ @require ] unless angular.isArray @require
-			else
-				@require = new Array()
-
-			@require.push sibling: requireDirective for requireDirective in @$_requireSiblings
-			@require.push parent : requireDirective for requireDirective in @$_requireParents
-
-			requireStrings = new Array()
-
-			for requireDirective in @require
-				if angular.isString requireDirective
-					requireStrings.push requireDirective
-				else if angular.isObject requireDirective
-					if requireDirective.sibling?
-						requireStrings.push "?#{ requireDirective.sibling::$_makeName() }"
-					else if requireDirective.parent?
-						requireStrings.push "^^?#{ requireDirective.parent::$_makeName() }"
+		@$_definitionProperties = angoolar.prototypallyMergePropertyArray @, '$_definitionProperties'
 
 		definition = {}
 
-		definition.priority    = @priority                                                 if @priority?
-		definition.require     = requireStrings or @require                                if requireStrings or @require
-		definition.template    = @template                                                 if @template?
-		definition.templateUrl = "#{ @templatePath }#{ @templateUrl }#{ @templateSuffix }" if @templateUrl?
-		definition.replace     = @replace                                                  if @replace?
-		definition.transclude  = @transclude                                               if @transclude?
-		definition.restrict    = @restrict                                                 if @restrict?
-		definition.scope       = @scope                                                    if @scope?
-		definition.controller  = @controller::$_makeConstructorArray()                     if @controller?
-		definition.notIsolated = @notIsolated                                              if @notIsolated?
+		definition[ property ] = @[ property ] for property in @$_definitionProperties when @[ property ]?
 
+		definition.templateUrl = "#{ @templatePath }#{ @templateUrl }#{ @templateSuffix }" if @templateUrl?
+		definition.controller  = @controller::$_makeConstructorArray?() or @controller     if @controller?
 		definition.compile = @$_compile
 
 		definition
@@ -94,29 +76,25 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 
 		module.directive @$_makeName(), @$_makeConstructorArray()
 
-	attachController = ( controller, attachTo, requireDirective ) ->
-		return unless controller?
-		actualName = angoolar.getRequiredDirectiveControllerName( requireDirective.parent or requireDirective.sibling or requireDirective )
-		attachTo[ actualName ] = controller if actualName?.length
-
 	# These methods are mostly what you'll want to customize when extending the BaseDirective
 	compile: ( tElement, tAttrs, transclude ) => # called only once when the directive's template element is created and modified before cloning.
 	preLink: ( scope, iElement, iAttrs, controller ) => # called once for each instance of the directive before each directive's template clone has been linked by the Angular $compile method
-		if @require?
+		if @require
 			if @controller?::$_name
-				directiveController = scope[ @controller?::$_name ]
-
-				if angular.isArray @require
-					for requireDirective, i in @require
-						attachController controller[ i ], directiveController, requireDirective
-				else
-					attachController controller, directiveController, @require
+				attachTo = scope[ @controller?::$_name ]
 			else
-				if angular.isArray @require
-					for requireDirective, i in @require
-						attachController controller[ i ], scope, requireDirective
-				else
-					attachController controller, scope, @require
+				attachTo = scope
+			
+			if angular.isString @require
+				controllerName = controller?.$_name or @require
+				attachTo[ controllerName ] = controller
+			else if angular.isArray @require
+				for eachController in controller
+					controllerName = eachController?.$_name or eachController
+					attachTo[ controllerName ] = eachController
+			else if angular.isObject @require
+				for controllerName, eachController of controller
+					attachTo[ controllerName ] = eachController
 
 	link: ( scope, iElement, iAttrs, controller ) => # called once for each instance of the directive after its content has been Angular-$compile'd; this is where to do any DOM manipulation specific to each instance of the directive.
 		# Set up the defaults for each of the defaults declared for any non-& isolated scope attribute (so interpolated, @ or two-way bound, =)

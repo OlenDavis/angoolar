@@ -6,6 +6,7 @@ angoolar.BaseModule = class BaseModule extends angoolar.Named
 	factories   : new Array() # These must extend BaseFactory,     and if defined, will each be attached to the created module
 	filters     : new Array() # These must extend BaseFilter,      and if defined, will each be attached to the created module
 	directives  : new Array() # These must extend BaseDirective,   and if defined, will each be attached to the created module
+	components  : new Array() # These must extend BaseComponent,   and if defined, will each be attached to the created module
 	controllers : new Array() # These must extend BaseController,  and if defined, will each be attached to the created module
 	animations  : new Array() # These must extend BaseAnimation,   and if defined, will each be attached to the created module
 
@@ -14,6 +15,7 @@ angoolar.BaseModule = class BaseModule extends angoolar.Named
 	addFactory    : ( factory     ) -> unless @$_module? then @factories   .push factory     else factory    ::$_addToAngular @$_module
 	addFilter     : ( filter      ) -> unless @$_module? then @filters     .push filter      else filter     ::$_addToAngular @$_module
 	addDirective  : ( directive   ) -> unless @$_module? then @directives  .push directive   else directive  ::$_addToAngular @$_module
+	addComponent  : ( component   ) -> unless @$_module? then @components  .push component   else component  ::$_addToAngular @$_module
 	addController : ( controller  ) -> unless @$_module? then @controllers .push controller  else controller ::$_addToAngular @$_module
 	addAnimation  : ( animation   ) -> unless @$_module? then @animations  .push animation   else animation  ::$_addToAngular @$_module
 
@@ -35,6 +37,7 @@ angoolar.BaseModule = class BaseModule extends angoolar.Named
 		factory    ::$_addToAngular @$_module for factory     in @factories
 		filter     ::$_addToAngular @$_module for filter      in @filters
 		directive  ::$_addToAngular @$_module for directive   in @directives
+		component  ::$_addToAngular @$_module for component   in @components
 		controller ::$_addToAngular @$_module for controller  in @controllers
 		animation  ::$_addToAngular @$_module for animation   in @animations
 

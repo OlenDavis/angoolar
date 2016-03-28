@@ -1,3 +1,10 @@
+angoolar.BaseComponentController = class BaseComponentController extends angoolar.BaseController
+	# $_name: "BaseComponentController" # Your extending BaseComponentController *must* declare its own $_name property to function - this is due to minification
+
+	$_autoAttachToDependency: null # because it's always auto-attached to its component's scope as $ctrl
+
+	$_dependencies: [ '$scope' ] # since the $scope isn't injected as part of the $_autoAttachToDependency, it needs to injected like so
+
 angoolar.BaseComponent = class BaseComponent extends angoolar.Named
 	# $_name: "BaseComponent" # Your extending BaseComponent *must* declare its own $_name property to function - this is due to minification
 

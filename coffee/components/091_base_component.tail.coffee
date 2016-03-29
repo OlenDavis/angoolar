@@ -23,6 +23,8 @@ angoolar.BaseComponent = class BaseComponent extends angoolar.Named
 		@templateUrl = "#{ @templatePath }#{ @templateUrl }#{ @templateSuffix }" if @templateUrl?
 		@controller = @controller::$_makeConstructorArray?() or @controller if @controller?
 
+		@$routeConfig = angoolar.prototypallyMergePropertyArray @, '$routeConfig' if @$routeConfig?
+
 	$_addToAngular: ( module ) ->
 		super
 

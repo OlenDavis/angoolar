@@ -36,12 +36,14 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 	$_definitionProperties: [
 		'priority'
 		'template'
+		'templateNamespace'
 		'replace'
 		'transclude'
 		'restrict'
 		'scope'
-		'notIsolated'
 		'require'
+		'controllerAs'
+		'bindToController'
 	]
 
 	$_makeAngularDefinition: ->
@@ -124,7 +126,6 @@ angoolar.BaseDirective = class BaseDirective extends angoolar.NamedDependent
 	transclude : null # by default, this is false, which means the contents of the directive can't be placed into the directive template; if you do want to "transclude" (a.k.a. "put") the directive's inner text into its template, make this true and put the directive, "ng-transclude" on the element you want to receive this directive's inner text
 	restrict   : null # by default, this is 'A' for attribute, but can also be 'E' for elements this isn't the Angular default (which is 'A' for attribute) but we will usually use directives for elements (there is also 'M' for comment/meta directives)
 	scope      : null # by default, this is false, which this means the directive's scope is not isolated from its parent scope; make it an object with keys for specific bindings on a scope isolated to this directive
-	notIsolated: null # This determines whether to treat this directive's scope as isolated or not; if not, then the directive's scope will simply be a child of its parent's scope.
 
 	# Use these to specify default values for isolated scope attributes by specifying an object whose keys are the isolate
 	# scope attribute names (as given on the scope member), and whose values will define the scope attribute whenever it
